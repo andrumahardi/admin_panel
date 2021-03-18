@@ -1,0 +1,23 @@
+@use "src/styles.scss" as main;
+
+$width: 3rem;
+
+.content{
+    padding: 1rem 0;
+    border-top: 1px solid #d0d0d0;
+    border-bottom: 1px solid #d0d0d0;
+    margin: 1rem 0;
+}
+
+.btn-group {
+    @include main.flexbox(row, space-between);
+    width: ($width * 2) + 0.2rem;
+}
+
+$buttons: ("primary" "cancel" "green");
+@each $btn in $buttons {
+    .outline-#{$btn}-btn, .full-#{$btn}-btn {
+        width: $width;
+        padding: 0.2rem 0.5rem;
+    }
+}

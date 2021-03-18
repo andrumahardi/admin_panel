@@ -1,0 +1,19 @@
+<section id="home">
+    <div [class]="expandSidebar ? 'aside aside--expand' : 'aside aside--collapse'">
+        <app-expand-bar
+            *ngIf="expandSidebar"
+            [menus]="menus"></app-expand-bar>
+        <app-collaps-bar 
+            *ngIf="!expandSidebar" 
+            [menus]="menus"></app-collaps-bar>
+    </div>
+    <main [class]="expandSidebar ? 'main main--partial' : 'main main--full'">
+        <app-upper-bar 
+            [expandSidebar]="expandSidebar"
+            (sidebarEvent)="toggleSidebar($event)"></app-upper-bar>
+        
+        <section id="home--content">
+            <router-outlet></router-outlet>
+        </section>
+    </main>
+</section>

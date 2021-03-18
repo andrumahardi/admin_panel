@@ -1,0 +1,87 @@
+<section id="login">
+    <main>
+        <figure>
+            <a routerLink="/login">
+                <img src="../../../assets/img/logo_ebesha_horizontal.svg" />
+            </a>
+        </figure>
+        <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+            <div class="input-wrappers">
+                <label for="username">Username</label>
+                <div class="input-content">
+                    <input 
+                        type="text"
+                        required
+                        ng-maxlength="20"
+                        [(ngModel)]="username"
+                        #ctrlUsername="ngModel"
+                        name="username" 
+                        id="username">
+                </div>
+                <span
+                    class="alert" 
+                    [hidden]="ctrlUsername.valid || ctrlUsername.pristine">
+                    Username is required
+                </span>
+            </div>
+            <div class="input-wrappers">
+                <label for="password">Password</label>
+                <div class="input-content">
+                    <input 
+                        [type]="showpassword ? 'text' : 'password'"
+                        required
+                        ng-maxlength="20"
+                        [(ngModel)]="password"
+                        #ctrlPassword="ngModel"
+                        name="password" 
+                        id="password">
+                    <img 
+                        (click)="showpassword = !showpassword" 
+                        src="../../../assets/img/see_password.svg" />
+                </div>
+                <span
+                    class="alert"
+                    [hidden]="ctrlPassword.valid || ctrlPassword.pristine">
+                    Password is required
+                </span>
+            </div>
+            <div class="input-wrappers">
+                <input 
+                    type="checkbox" 
+                    name="rememberuser" 
+                    id="rememberuser">
+                <label for="rememberuser">Remember me</label>
+            </div>
+            <div id="form-lower-section">
+                <button
+                    type="button" 
+                    class="outline-white-btn">
+                    Forgot Password
+                </button>
+                <button
+                    *ngIf="!loading"
+                    class="full-primary-btn"
+                    [disabled]="loginForm.invalid || loginForm.pristine" 
+                    type="submit">
+                    Login
+                </button>
+                <button
+                    *ngIf="loading"
+                    [disabled]="true"
+                    type="button">
+                    <mat-spinner
+                     [diameter]="20"></mat-spinner>
+                </button>
+            </div>
+            <p 
+                *ngIf="showErrorDialog && loginForm.pristine" 
+                class="alert-popup">
+                {{ errorMessage }}
+            </p>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; {{ currentYear }} PT. Lintas Media Danawa. All rights reserved</p>
+        <p>www.lintasmediadanawa.com</p>
+    </footer>
+</section>

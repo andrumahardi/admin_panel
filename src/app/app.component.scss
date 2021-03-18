@@ -1,0 +1,27 @@
+@use "src/styles.scss" as main;
+
+header{
+    padding: 1rem 1rem 0 1rem;
+
+    .btn-group {
+        padding-bottom: 1rem;
+    }
+
+    .filter-group input{
+        width: 100%;
+    }
+
+    ::ng-deep .mat-form-field-appearance-outline {
+        padding: 0.5rem 0;
+        width: 100%;
+        border-top: 0.25rem solid transparent !important;
+        font-size: 10pt;
+    }
+}
+
+.outline-primary-btn {
+    padding: 0.5rem;
+    width: 6rem;
+}
+
+@include main.tableComponent;

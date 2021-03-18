@@ -1,0 +1,45 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="formcomponent">
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Role name</mat-label>
+                <input 
+                    type="text"
+                    matInput
+                    name="role_name"
+                    [formControl]="formControl.role_name">
+                <mat-error *ngIf="formControl.role_name.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select 
+                    name="is_active"
+                    [formControl]="formControl.is_active">
+                    <mat-option value="active"> Active </mat-option>
+                    <mat-option value="inactive"> Inactive </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+    </div>
+    <div *ngIf="!disableState" class="btn-group">
+        <button 
+            type="submit" 
+            class="full-primary-btn">
+            Save
+        </button>
+        <button 
+            type="button" 
+            (click)="onCancel()"
+            style="margin-left: 0.5rem;"
+            class="outline-cancel-btn">
+            Cancel
+        </button>
+    </div>
+</form>

@@ -1,0 +1,14 @@
+<section class="router-container">
+    <div id="form-section">
+        <header>
+            <h3>New Menu</h3>
+        </header>
+        <app-menu-form
+            [data]="formControlData"
+            [forEdit]="false"
+            [disableState]="false"
+            (cancelEvent)="closeForm()"
+            (submitEvent)="create($event)"></app-menu-form>
+    </div>
+</section>
+  

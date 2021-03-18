@@ -1,0 +1,31 @@
+<aside class="sidebar">
+    <header>
+        <figure
+            class="sidebar--img"
+            style="background: url(../../../assets/img/icon_ebesha_logo.png)">
+        </figure>
+    </header>
+    
+    <div 
+        *ngFor="let menu of menus; i"
+        class="iconmenu">
+        <button 
+            mat-button 
+            [matMenuTriggerFor]="collmenulist">
+            <img 
+                class="iconmenu__img" 
+                [src]="menu.menu_icon_url" />
+        </button>
+        <mat-menu #collmenulist="matMenu">
+            <a 
+                mat-menu-item
+                *ngFor="let childmenu of menu.children; i" 
+                [routerLink]="childmenu.menu_path_url">
+                <img 
+                    class="iconmenu__img" 
+                    [src]="childmenu.menu_icon_url" />
+                <span class="iconmenu__name">{{childmenu.menu_name}}</span>
+            </a>
+        </mat-menu>
+    </div>
+</aside>

@@ -1,0 +1,173 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="formcomponent">
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>First name</mat-label>
+                <input
+                    type="text"
+                    name="firstname"
+                    [formControl]="formControl.first_name"
+                    matInput>
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Last name</mat-label>
+                <input
+                    type="text"
+                    name="lastname"
+                    [formControl]="formControl.last_name"
+                    matInput>
+            </mat-form-field>
+        </div>
+    
+       <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input 
+                    type="username"
+                    matInput
+                    [formControl]="formControl.username">
+                <mat-error *ngIf="formControl.username.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+                <mat-error *ngIf="formControl.username.hasError('maxlength')">
+                    {{errorMessages.maxlength}}
+                </mat-error>
+                <mat-error *ngIf="formControl.username.hasError('minlength')">
+                    {{errorMessages.minlength}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input 
+                    type="email"
+                    matInput
+                    [formControl]="formControl.email">
+                <mat-error *ngIf="formControl.email.hasError('email')">
+                    {{errorMessages.email}}
+                </mat-error>
+                <mat-error *ngIf="formControl.email.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+                <mat-error *ngIf="formControl.email.hasError('maxlength') && !formControl.email.hasError('email')">
+                    {{errorMessages.maxlength}}
+                </mat-error>
+                <mat-error *ngIf="formControl.email.hasError('minlength') && !formControl.email.hasError('email')">
+                    {{errorMessages.minlength}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Mobile</mat-label>
+                <input 
+                    type="tel"
+                    matInput
+                    name="mobile"
+                    [formControl]="formControl.mobile">
+                <mat-error *ngIf="formControl.mobile.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+                <mat-error *ngIf="formControl.mobile.hasError('maxlength')">
+                    {{errorMessages.maxPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.mobile.hasError('mobilepattern') && !formControl.mobile.hasError('maxlength')">
+                    {{errorMessages.mobilePatternInvalid}}
+                </mat-error>
+                <mat-error *ngIf="formControl.mobile.hasError('minlength') && !formControl.mobile.hasError('mobilepattern')">
+                    {{errorMessages.minPhoneNum}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Tenant</mat-label>
+                <mat-select 
+                    name="tenant"
+                    [formControl]="formControl.tenant">
+                    <mat-option value=""> - </mat-option>
+                    <mat-option 
+                        *ngFor="let tenant of listTenants" 
+                        [value]="tenant.id.toString()">{{ tenant.tenant_name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControl.tenant.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label> Status </mat-label>
+                <input 
+                    type="text"
+                    matInput
+                    name="is_confirmed"
+                    readonly
+                    [formControl]="formControl.is_confirmed">
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Date Joined</mat-label>
+                <input 
+                    type="text"
+                    matInput
+                    readonly
+                    name="date_joined"
+                    [formControl]="formControl.date_joined">
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="forEdit"  class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Role</mat-label>
+                <mat-select 
+                    name="role"
+                    [formControl]="formControl.role">
+                    <mat-option value=""> - </mat-option>
+                    <mat-option 
+                        *ngFor="let role of listRoles" 
+                        [value]="role.id.toString()">{{ role.role_name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="!forEdit" class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input 
+                    type="text"
+                    matInput
+                    name="password"
+                    [formControl]="formControl.password">
+                <mat-error *ngIf="formControl.password.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div *ngIf="!disableState" class="btn-group">
+        <button 
+            type="submit" 
+            class="full-primary-btn">
+            Save
+        </button>
+        <button 
+            type="button" 
+            (click)="onCancel()"
+            style="margin-left: 0.5rem;"
+            class="outline-cancel-btn">
+            Cancel
+        </button>
+    </div>
+</form>

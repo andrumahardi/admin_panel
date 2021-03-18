@@ -1,0 +1,122 @@
+@use "src/styles.scss" as main;
+
+*, p{
+    padding: 0;
+    color: white;
+}
+
+.sidebar{
+    background-color: main.$main-orange;
+    top: 0;
+    height: 100%;
+    
+    header{
+        @include main.flexbox($align: center);
+    }
+    
+    &--img{
+        @include main.cover_image;
+        width: 75%;
+        height: 7rem;
+    }
+}
+
+.accordions {
+    background-color: main.$main-orange;
+    border-radius: 0;
+    box-shadow: none;
+
+    &__header{
+        padding: 0.5rem;
+        height: 2rem;
+
+        strong{
+            @include main.flexbox(row, unset, center);
+        }
+    }
+    &__content{
+        padding: 0;
+    }
+    &__img{
+        width: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    a{
+        @include main.flexbox(row, unset, center);
+        padding: 0.5rem;
+
+        &:hover{
+            background-color: lighten(main.$main-orange, 4%);
+        }
+    }
+}
+
+::ng-deep div.mat-expansion-panel-body {
+    padding: 0;
+
+    p{
+        margin: 0.5rem;
+    }
+}
+
+.mat-expanded {
+    background-color: lighten(main.$main-orange, 2%);
+    .accordions__header{
+        background-color: darken(main.$main-orange, 2%);
+    }
+}
+
+.iconmenu{
+    button{
+        @include main.flexbox(column, center, center);
+        background: none;
+        border: none;
+        width: 100%;
+        height: 2rem;
+
+        &:hover{
+            background-color: darken(main.$main-orange, 4%);
+        }
+    }
+    &__img{
+        width: 1.5rem;
+    }
+}
+
+::ng-deep div.mat-menu-panel{
+    min-height: unset;
+}
+
+::ng-deep div.mat-menu-content{
+    padding: 0 !important;
+    background-color: lighten(main.$main-orange, 4%);
+
+    a {
+        @include main.flexbox(row, unset, center);
+
+        span{
+            margin-left: 0.5rem;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .accordions{
+        &__menuname{
+            font-size: 7pt;
+        }
+        &__img{
+            width: 1rem;
+        }
+    }
+
+    .iconmenu{
+        &__img{
+            width: 1rem;
+        }
+        &__name{
+            font-size: 7pt;
+        }
+    }
+}

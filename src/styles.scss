@@ -1,0 +1,176 @@
+/* You can add global styles to this file, and also import other style files */
+// This is for global style only for component base please go to per component's scss file instead
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+$main-blue: #0e6cc1;
+$main-orange: #e28f12;
+$main-white: #ffffff;
+$light-blue: #3589ad;
+$black-opaque: #00000082;
+
+$upperbar-height: 3rem;
+$sidebar-expanded-width: 10rem;
+$sidebar-collapsed-width: 3rem;
+
+@mixin flexbox($direction: column, $justify: none, $align: none, $wrap: wrap) {
+    display: flex;
+    flex-wrap: $wrap;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+@mixin cover_image{
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+}
+
+@mixin defaultbtn_style($col: $light-blue, $bg: none) {
+
+    @if $bg != none {
+        background: $bg;
+        color: #ffffff;
+        border-color: #ffffff;
+    }
+    @else {
+        background: none;
+        color: $col;
+        border-color: $col;
+    }
+
+    border: 1px solid;
+    border-radius: 0.2rem;
+    font-weight: bold;
+
+    &:hover{
+        @if $bg != none {
+            background: darken($bg, 6%);
+        }
+        @else {
+            box-shadow: 0 0 0 0.2rem adjust-color($color: $col, $alpha: -0.5);
+        }
+    }
+}
+
+@mixin gridview($rowgap: 0.5rem, $colgap: 0.5rem, $coltemplate: none, $rowtemplate: none) {
+    display: grid;
+    row-gap: $rowgap;
+    column-gap: $colgap;
+
+    @if $coltemplate != none {
+        grid-template-columns: $coltemplate;
+    }
+    @else if $rowtemplate != none {
+        grid-template-rows: $rowtemplate;
+    }
+}
+
+@mixin tableComponent {
+    .table{
+        width: calc(100% - 2rem);
+        margin: 0 auto;
+        box-shadow: none;
+        
+        &--actionbtns{
+            @include flexbox(row, space-evenly, unset);
+        }
+        
+        ::ng-deep tr.mat-header-row {
+            background: linearGradient();
+            
+            th {
+                text-align: center;
+            }
+        }
+        
+        span, p{
+            color: black !important;
+        }
+    }
+}
+
+@function linearGradient ($color: $main-orange, $sec-color: white, $degree: 45deg) {
+    @return linear-gradient($degree, $color, mix($color, $sec-color));
+}
+
+.router-container{
+    background: white !important;
+}
+
+p, label, span, a, button{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+}
+
+a {
+    color: black;
+}
+
+body{
+    overflow: hidden;
+}
+
+.spinner {
+    &--parent{
+        position: relative;
+    }
+    &--container{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+button, 
+a, 
+input[type="checkbox"] + label, 
+input[type="radio"] + label{
+    outline: none;
+    cursor: pointer;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+button:disabled{
+    cursor: not-allowed !important;
+}
+
+button.outline-primary-btn {
+    @include defaultbtn_style();
+}
+
+button.outline-white-btn {
+    @include defaultbtn_style($col: #ffffff);
+}
+
+button.outline-cancel-btn {
+    @include defaultbtn_style($col: #a51313);
+}
+
+button.full-primary-btn{
+    @include defaultbtn_style($bg: $light-blue);
+}
+
+button.full-green-btn{
+    @include defaultbtn_style($bg: #14981e);
+}
+
+button.outline-black-btn {
+    @include defaultbtn_style($col: #000000);
+}
+
+$selectors: ("input", "input:active", "input:hover");
+@each $selector in $selectors{
+    #{$selector}{
+        border: none;
+        outline: none;
+    }
+}

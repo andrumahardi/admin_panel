@@ -1,0 +1,71 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="formcomponent">
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Menu Sequence</mat-label>
+                <input
+                    type="text"
+                    name="menu_seq"
+                    [formControl]="formControl.menu_seq"
+                    matInput>
+            </mat-form-field>
+        </div>
+        
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Menu Name</mat-label>
+                <input
+                    type="text"
+                    name="menu_name"
+                    [formControl]="formControl.menu_name"
+                    matInput>
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Menu Url</mat-label>
+                <input
+                    type="text"
+                    name="menu_path_url"
+                    [formControl]="formControl.menu_path_url"
+                    matInput>
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Parent Menu</mat-label>
+                <input
+                    type="text"
+                    name="parent"
+                    [formControl]="formControl.parent"
+                    matInput>
+            </mat-form-field>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea
+                    matInput
+                    name="description"
+                    [formControl]="formControl.description"></textarea>
+              </mat-form-field>
+        </div>
+    </div>
+    <div *ngIf="!disableState" class="btn-group">
+        <button 
+            type="submit" 
+            class="full-primary-btn">
+            Save
+        </button>
+        <button 
+            type="button" 
+            (click)="onCancel()"
+            style="margin-left: 0.5rem;"
+            class="outline-cancel-btn">
+            Cancel
+        </button>
+    </div>
+</form>

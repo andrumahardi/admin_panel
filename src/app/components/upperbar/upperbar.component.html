@@ -1,0 +1,37 @@
+<nav id="upperbar">
+    <a 
+        id="upperbar--toggler"
+        style="cursor: pointer;"
+        (click)="toggleSidebar()">
+        <img src="/assets/img/menu-open.svg"/>
+        <span>menu</span>
+    </a>
+    <section 
+        (click)="showdropdown = !showdropdown" 
+        id="upperbar--profilebtn">
+        <figure 
+            class="profilepic"
+            style="background-image: url(../../assets/img/user_nopp.svg);">
+        </figure>
+        <p>{{ user.email }}</p>
+    </section>
+    <section 
+        *ngIf="showdropdown" 
+        id="upperbar--dropdown">
+        <figure
+            class="profilepic"
+            style="background-image: url(../../assets/img/user_nopp.svg);">
+        </figure>
+        <article>
+            <p><strong>{{user.username}}</strong></p>
+            <p><small>{{user.email}}</small></p>
+        </article>
+        <div class="profilebtns">
+            <button 
+                (click)="logout()"
+                class="outline-primary-btn">
+                Logout
+            </button>
+        </div>
+    </section>
+</nav>

@@ -1,0 +1,34 @@
+<section class="router-container spinner--parent">
+    <div *ngIf="loading" class="spinner--container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div id="form-section">
+        <header>
+            <h3>Detail user</h3>
+            <div *ngIf="!editMode" class="btn-group">
+                <button
+                    type="button"
+                    (click)="editMode = true"
+                    class="outline-primary-btn">
+                    Update Detail
+                </button>
+                <button
+                    *ngIf="!detailUser.is_confirmed"
+                    type="button"
+                    style="margin-left: 0.5rem;"
+                    (click)="confirmUser()"
+                    class="full-green-btn">
+                    Confirm User
+                </button>
+            </div>
+        </header>
+        <app-user-form
+            [data]="formControlData"
+            [forEdit]="true"
+            [disableState]="!editMode"
+            (cancelEvent)="closeForm()"
+            (submitEvent)="update($event)"></app-user-form>
+    </div>
+</section>
+  

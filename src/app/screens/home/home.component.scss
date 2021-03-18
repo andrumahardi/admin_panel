@@ -1,0 +1,53 @@
+@use "src/styles.scss" as main;
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#home{
+    width: 100vw;
+    min-height: 100vh;
+    @include main.flexbox($direction: row, $justify: space-between, $wrap: none);
+
+    .aside{
+        transition: width 1s;
+        &--expand{
+            width: main.$sidebar-expanded-width;
+        }
+        &--collapse{
+            width: main.$sidebar-collapsed-width;
+        }
+    }
+    
+    .main{
+        transition: width 1s;
+        &--partial{
+            width: 100%;
+        }
+        &--full{
+            width: calc(100% - #{main.$sidebar-collapsed-width});
+        }
+    }
+
+    &--content{
+        $--content-padding: 1rem;
+        background: #ecf0f5;
+        padding: $--content-padding;
+        height: calc(100vh - (#{main.$upperbar-height + $--content-padding * 2}));
+        overflow: auto;
+    }
+}
+
+header{
+    @include main.flexbox(column, center, center);
+    height: 5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .aside{
+        &--expand{
+            width: 0 !important;
+        }
+    }
+}

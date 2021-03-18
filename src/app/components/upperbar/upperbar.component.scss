@@ -1,0 +1,95 @@
+@use "src/styles.scss" as main;
+
+$nav-padding: 1rem;
+
+p, a, button{
+    color: black;
+    text-align: center;
+}
+
+#upperbar{
+    position: relative;
+    height: main.$upperbar-height;
+    padding: 0 $nav-padding;
+    box-shadow: 0.1rem 0.1rem 0.5rem main.$black-opaque;
+    @include main.flexbox(row, space-between, center);
+
+    &--profilebtn{
+        @include main.flexbox(row, space-between, center);
+        border-radius: 1rem;
+        padding: 0 ($nav-padding / 4);
+        height: (main.$upperbar-height - 1rem);
+        cursor: pointer;
+
+        &:hover{
+            box-shadow: 0 0 0.5rem main.$black-opaque;
+        }
+
+        .profilepic{
+            height: 1.5rem;
+            width: 1.5rem;
+        }
+
+        p{
+            margin: 0 0.5rem;
+        }
+    }
+
+    &--toggler{
+        @include main.flexbox(row, space-between, unset);
+        width: 4rem;
+
+        &:hover{
+            opacity: 0.5;
+        }
+    }
+
+    &--dropdown{
+        @include main.flexbox(column, unset, center);
+        box-shadow: 0.2rem 0.2rem 0.5rem main.$black-opaque;
+        position: absolute;
+        right: $nav-padding;
+        top: (main.$upperbar-height + 0.5rem);
+        padding: ($nav-padding / 2) $nav-padding;
+        border-radius: 0.5rem;
+        background: white;
+        z-index: 3;
+
+        p:first-child{
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+.profilepic{
+    @include main.cover_image;
+    height: 5rem;
+    width: 5rem;
+}
+
+.profilebtns{
+    @include main.flexbox(row, center, unset);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid black;
+    width: 100%;
+}
+
+.outline-primary-btn{
+    width: 6rem;
+    padding: 0.5rem;
+}
+
+@media screen and (max-width: 768px){
+    #upperbar{
+        &--profilebtn{
+            p {
+                display: none;
+            }
+        }
+        
+        &--dropdown{
+            width: 10rem;
+        }
+    }
+}

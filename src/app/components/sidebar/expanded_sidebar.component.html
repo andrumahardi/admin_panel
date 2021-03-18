@@ -1,0 +1,27 @@
+<aside class="sidebar">
+    <header>
+        <figure
+            class="sidebar--img"
+            style="background: url(../../../assets/img/logo_ebesha_horizontal.svg)">
+        </figure>
+    </header>
+
+    <mat-expansion-panel 
+        *ngFor="let menu of menus; i"
+        class="accordions" hideToggle>
+        <mat-expansion-panel-header class="accordions__header">
+            <img 
+                class="accordions__img" 
+                [src]="menu.menu_icon_url" /> 
+            <strong class="accordions__menuname">{{menu.menu_name}}</strong>
+        </mat-expansion-panel-header>
+        <a 
+            *ngFor="let childmenu of menu.children; i" 
+            [routerLink]="childmenu.menu_path_url" >
+            <img 
+                class="accordions__img" 
+                [src]="childmenu.menu_icon_url" />
+            <span class="accordions__menuname">{{ childmenu.menu_name }}</span>
+        </a>
+    </mat-expansion-panel>
+</aside>
