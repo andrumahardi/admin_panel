@@ -1,10 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
 import { Generics } from "src/app/models/generics";
-import { MenuService } from "src/app/service/menu.service";
 
 import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 
@@ -24,11 +21,7 @@ export class CreateMenu{
     }
 
     constructor(
-        private menuService: MenuService,
-        private route: ActivatedRoute,
-        private cookieService: CookieService,
         private dialog: MatDialog,
-        private router: Router
     ) {
         this.setControlStates()
     }

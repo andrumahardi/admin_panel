@@ -36,7 +36,7 @@ export class ConfirmDeleteDialog{
   template: `
   <h3 mat-dialog-title>Action failed</h3>
   <div mat-dialog-content class="content">
-    <p>{{data.message}}</p>
+    <p>{{data.message || "Server refused to connect"}}</p>
   </div>
   <div mat-dialog-actions class="btn-group">
     <button 
@@ -90,7 +90,7 @@ export class ConfirmUpdateDialog{
   template: `
   <h3 mat-dialog-title>Action Result</h3>
   <div mat-dialog-content class="content">
-    <p>Email verification has been sent to {{data.email}}</p>
+    <p>{{ data.message }}</p>
   </div>
   <div mat-dialog-actions class="btn-group">
     <button 
@@ -103,7 +103,7 @@ export class ConfirmUpdateDialog{
   `,
   styleUrls: ["./modal_confirm.component.scss"]
 })
-export class EmailVerificationSent{
+export class ActionSuccess{
   constructor(
     public dialogRef: MatDialogRef<ConfirmUpdateDialog>,
     @Inject(MAT_DIALOG_DATA) public data: Generics

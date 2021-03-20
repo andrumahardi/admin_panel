@@ -52,6 +52,5 @@ export class Menulist extends Paginator {
     }
 
     delete(id: number): void {
-        console.log(id)
     }
 }

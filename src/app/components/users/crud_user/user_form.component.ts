@@ -11,6 +11,10 @@ import { AppState } from "src/app/app.states";
 import { ArrayOfObjects, Generics } from "src/app/models/generics";
 import { RoleService } from "src/app/service/role.service";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions"
+import { TenantService } from "src/app/service/tenant.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
+import { MatDialog } from "@angular/material/dialog";
 
 
 @Component({
@@ -42,7 +46,9 @@ export class UserForm implements OnChanges{
 
     constructor(
         private store: Store<AppState>,
-        private roleService: RoleService
+        private roleService: RoleService,
+        private tenantService: TenantService,
+        private dialog: MatDialog
     ) {
         this.fetchRequiredData()
     }
@@ -61,9 +67,7 @@ export class UserForm implements OnChanges{
 
     private fetchRequiredData(): void {
         this.getListRoles()
-        Promise.all([
-            this.getListTenants(),
-        ])
+        this.getListTenants()
     }
 
     readonly formControl: {[key: string]: FormControl} = {
@@ -96,30 +100,38 @@ export class UserForm implements OnChanges{
         ])
     }
 
-    private getListTenants(): Promise<boolean> {
-        return new Promise((resolve, _) => {
-            this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects): void => {
-                    this.listTenants = data.tenantList
-                    resolve(true)
-                })
-        })
-    }
-
     private getListRoles(): void {
         const promise = new Promise<ArrayOfObjects>((resolve, _) => {
             this.store.select("dropdownItems")
                 .subscribe((data: ArrayOfObjects): void => resolve(data))
         })
-        promise.then(async (data: ArrayOfObjects) => {
-            if (!data.roleList[0]) {
-                const { results }: Generics = await this.roleService.getList("purpose=dropdown")
-                this.store.dispatch(DropdownListActions.setRoleList({ payload: results }))
-                this.listRoles = results
-            }
-            else this.listRoles = data.roleList
+        promise
+            .then(async (data: ArrayOfObjects) => {
+                if (!data.roleList[0]) {
+                    const { results }: Generics = await this.roleService.getAll()
+                    this.store.dispatch(DropdownListActions.setRoleList({ payload: results }))
+                    this.listRoles = results
+                }
+                else this.listRoles = data.roleList
+            })
+            .catch((error) => this.errorPopUpGenerator(error))
+    }
+
+    private getListTenants(): void {
+        const promise = new Promise<ArrayOfObjects>((resolve, _) => {
+            this.store.select("dropdownItems")
+                .subscribe((data: ArrayOfObjects): void => resolve(data))
         })
-        .catch((err) => console.log(err))
+        promise
+            .then(async (data: ArrayOfObjects) => {
+                if (!data.tenantList[0]) {
+                    const { results }: Generics = await this.tenantService.getAll()
+                    this.store.dispatch(DropdownListActions.setTenantList({ payload: results }))
+                    this.listTenants = results
+                }
+                else this.listTenants = data.tenantList
+            })
+            .catch((error) => this.errorPopUpGenerator(error))
     }
 
     onSubmit(): void {
@@ -142,6 +154,24 @@ export class UserForm implements OnChanges{
                 this.formControl[key].setValue(data[key])
             }
         }
+    }
+
+    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
+        let message: string = ""
+        switch (status) {
+            case 400:
+                for (const key in error.detail) {
+                    message = error.detail[key][0]
+                    break
+                }
+                break
+            case 500:
+                message = "Server could not process data"
+                break
+            default:
+                message = error.detail
+        }
+        this.dialog.open(ErrorPopup, { data: { message }})
     }
 }
 

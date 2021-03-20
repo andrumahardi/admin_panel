@@ -27,9 +27,16 @@
             <p><small>{{user.email}}</small></p>
         </article>
         <div class="profilebtns">
-            <button 
-                (click)="logout()"
-                class="outline-primary-btn">
+            <button
+                type="button"
+                (click)="changePassword()"
+                class="inline-btns">
+                Change Password
+            </button>
+            <button
+                type="button"
+                class="inline-btns"
+                (click)="logout()">
                 Logout
             </button>
         </div>

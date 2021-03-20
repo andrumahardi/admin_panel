@@ -5,7 +5,8 @@ import { ArrayOfObjects } from "../models/generics";
 
 const initialState: ArrayOfObjects = {
     tenantList: [],
-    roleList: []
+    roleList: [],
+    menuList: []
 }
 
 const stateReducer = createReducer(
@@ -20,6 +21,12 @@ const stateReducer = createReducer(
         return {
             ...state,
             tenantList: payload
+        }
+    }),
+    on(DropdownListActions.setMenuList, (state: ArrayOfObjects = initialState, { payload }: ArrayOfObjects): ArrayOfObjects => {
+        return {
+            ...state,
+            menuList: payload
         }
     })
 )

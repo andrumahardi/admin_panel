@@ -9,7 +9,8 @@ export interface Generics {
 
 export interface DropdownItemActionTypes {
     SET_TENANT_LIST: string,
-    SET_ROLE_LIST: string
+    SET_ROLE_LIST: string,
+    SET_MENU_LIST: string
 }
 
 export interface ArrayOfObjects {

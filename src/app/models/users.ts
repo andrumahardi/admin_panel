@@ -1,3 +1,4 @@
+import { Generics } from "./generics";
 import { Menu } from "./menus";
 
 export interface User {
@@ -30,6 +31,6 @@ export interface UserReducerPayload {
 }
 
 export interface UserStates {
-    currentUser: User | {[key: string]: any},
+    currentUser: User | Generics,
     userMenus: Array<Menu>
 }

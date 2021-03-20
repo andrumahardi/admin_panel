@@ -4,11 +4,7 @@ import {
     FormControl,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
-import { Helpers } from "src/app/app.helpers";
 import { Generics } from "src/app/models/generics";
-import { RoleService } from "src/app/service/role.service";
 
 import { UserService } from "src/app/service/user.service";
 import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
@@ -27,9 +23,6 @@ export class DetailRole{
     formControlData: Generics = {}
 
     constructor(
-        private roleService: RoleService,
-        private route: ActivatedRoute,
-        private cookieService: CookieService,
         private dialog: MatDialog
     ) {
         this.fetchRequiredData()
@@ -102,8 +95,8 @@ export class DetailRole{
         //     }
 
         //     this.setControlStates(newFormControlValues)
-        //     const currentUserID = this.cookieService.get("user_id")
-        //     if (data.id === +currentUserID) {
+        //     const currentUserID: number = Number(localStorage.getItem("user_id"))
+        //     if (data.id === currentUserID) {
         //         this.roleService.setLoggedinUser(data)
         //     }
 

@@ -1,29 +1,15 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/http"
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { Observable } from "rxjs"
 import { PreLoginPayload, User } from "../models/users"
 import { ConfigService } from "./config.service"
 
 import * as UserActions from "../actions/user.actions"
-import { Menu } from "../models/menus"
 import { Generics, PaginatedListResult } from "../models/generics"
-import { CookieService } from "ngx-cookie-service"
-import { AppState } from "../app.states"
-import { Store } from "@ngrx/store"
 
 @Injectable({
     providedIn: "root"
 })
 export class UserService extends ConfigService {
-
-    constructor(
-        protected http: HttpClient,
-        protected cookieService: CookieService,
-        protected store: Store<AppState>
-    ) {
-        super(http, cookieService, store)
-    }
-    
     private readonly baseEndpoint: string = `${this.getUrl("users")}/`
 
     doLogin(payload: PreLoginPayload): Promise<Generics> {
@@ -33,10 +19,9 @@ export class UserService extends ConfigService {
             this.http.post(url, payload, { observe: "response" })
                 .subscribe((data: HttpResponse<Generics>) => {
                     const { body }: Generics = data
-
-                    this.cookieService.set("token", body.key)
-                    this.cookieService.set("user_id", JSON.stringify(body.id))
-                    this.cookieService.set("crm_key", body.crm_key)
+                    
+                    localStorage.setItem("token", body.key)
+                    localStorage.setItem("user_id", String(body.id))
 
                     this.setLoggedinUser(body)
                     resolve(body)
@@ -44,15 +29,13 @@ export class UserService extends ConfigService {
         })
     }
 
-    getUser(id: number): Observable<Generics> {
+    getUser(id: number): Promise<Generics> {
         const url = `${this.baseEndpoint}${id}/`
 
-        return new Observable<Generics>(observer => {
-            return this.http
-                .get(url, { headers: { authorization: `Token ${this.getAccessToken()}` }})
-                .subscribe((data: Generics): void => {
-                    observer.next(data)
-                })
+        return new Promise<Generics>((resolve, reject) => {
+            this.http.get(url, { headers: { authorization: `Token ${this.getAccessToken()}` }})
+                .subscribe((data: Generics): void => resolve(data), 
+                (error: HttpErrorResponse) => reject(error))
         })
     }
 
@@ -97,10 +80,10 @@ export class UserService extends ConfigService {
         })
     }
 
-    doActivate(payload: Generics, id: number, authorization: string): Promise<void>{
-        const url = `${this.baseEndpoint}${id}/?flag=email_activation`
+    doActivate(id: number, authorization: string): Promise<void>{
+        const url = `${this.baseEndpoint}${id}/email_activation`
         return new Promise((resolve, reject) => {
-            this.http.patch(url, payload, {
+            this.http.get(url, {
                 observe: "response",
                 headers: { authorization }
             })
@@ -109,17 +92,26 @@ export class UserService extends ConfigService {
         })
     }
 
-    doLogout(): Promise<void> {
+    doLogout(): Promise<boolean> {
         const url = `${this.baseEndpoint}logout`
+        const token = `Token ${this.getAccessToken()}`
+        
+        return new Promise<boolean>((resolve) => {
+            this.http.get(url, { observe: "response", headers: {
+                authorization: token
+            }}).subscribe(() => resolve(true))
+        })
+    }
+
+    doChangePassword(payload: Generics, id: number): Promise<void> {
+        const url = `${this.baseEndpoint}${id}/change_password`
+
         return new Promise((resolve, reject) => {
-            this.http.get(url, { 
-                observe: "response",
-                headers: {
-                    authorization: `Token ${this.getAccessToken()}`
-                } 
-            })
+            this.http.patch(url, payload, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}`
+            }})
                 .subscribe(() => resolve(),
-                (err) => reject(err))
+                (error: HttpErrorResponse) => reject(error))
         })
     }
 
@@ -137,15 +129,23 @@ export class UserService extends ConfigService {
 
     doConfirmUser(payload: Generics): Promise<void> {
         const url = `${this.baseEndpoint}send_email_confirmation`
-        const crmAccess = this.cookieService.get("crm_key")
 
         return new Promise((resolve, reject): void => {
             this.http.post(url, payload, {
-                headers: { authorization: `Token ${this.getAccessToken()}` },
-                params: { "crm_access": crmAccess }
+                headers: { authorization: `Token ${this.getAccessToken()}` }
             })
                 .subscribe((): void => resolve(),
                 (error): void => reject(error))
+        })
+    }
+
+    doResetPassword(params: string): Promise<void> {
+        const url = `${this.baseEndpoint}reset_password?${params}`
+
+        return new Promise<void>((resolve, reject) => {
+            this.http.get(url, { observe: "response" })
+                .subscribe(() => resolve(),
+                (error: HttpErrorResponse) => reject(error))
         })
     }
 
@@ -160,33 +160,5 @@ export class UserService extends ConfigService {
             is_active: payload.is_active
         }
         this.store.dispatch(UserActions.setUser({payload: user}))
-    }
-
-    setUserMenu(menulist: Array<Generics>): void {
-        const menu: Array<Menu> = menulist.map((obj: Generics) => {
-            let output: Menu = {
-                id: obj.id,
-                menu_name: obj.menu_name,
-                menu_icon_url: obj.menu_icon_url,
-                menu_path_url: obj.menu_path_url,
-                parent: obj.parent,
-                children: []
-            }
-            menulist.forEach((child: Generics) => {
-                if (obj.id === child.parent) {
-                    output["children"].push({
-                        id: child.id,
-                        menu_name: child.menu_name,
-                        menu_icon_url: child.menu_icon_url,
-                        menu_path_url: child.menu_path_url,
-                        parent: child.parent,
-                        children: []
-                    })
-                }
-            })
-            return output
-        }).filter((obj: Generics) => !obj.parent)
-
-        this.store.dispatch(UserActions.setUserMenu({ payload: menu }))
     }
 }

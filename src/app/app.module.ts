@@ -25,10 +25,13 @@ import { RouterGuard } from './router.guard';
 // Component modules
 import { AppComponent } from './app.component';
 import { LoginComponent } from "./screens/login/login.component"
+import { LoginChildComponent } from "src/app/components/login/login_child.component"
 import { HomeComponent } from "./screens/home/home.component"
 import { userReducer } from './reducers/user.reducers';
 import { dropdownItemsReducer } from "src/app/reducers/dropdown_items.reducers"
 import { ActivationUser } from "src/app/screens/activation_user/activation_user.component"
+import { ForgotPassword } from "src/app/components/forgot_password/forgot_password.component"
+import { ChangePassword } from "src/app/components/change_password/change_password.component"
 
 // Modal dialogs
 import { ConfirmDeleteDialog } from "src/app/components/modal_dialog/modal_confirm.component"
@@ -52,7 +55,7 @@ import { CreateUser } from "src/app/components/users/crud_user/create_user.compo
 import { DetailUser } from "src/app/components/users/crud_user/detail_user.component"
 
 // Home modules
-import { HomeChildComponent } from "src/app/components/home/home.component"
+import { HomeChildComponent } from "src/app/components/home/home_child.component"
 
 
 // Role modules
@@ -65,6 +68,7 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
   declarations: [
     AppComponent,
     LoginComponent,
+    LoginChildComponent,
     HomeComponent,
     HomeChildComponent,
     ActivationUser,
@@ -84,7 +88,9 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
     DetailRole,
     ConfirmDeleteDialog,
     ConfirmUpdateDialog,
-    ErrorPopup
+    ErrorPopup,
+    ForgotPassword,
+    ChangePassword
   ],
   imports: [
     BrowserModule,

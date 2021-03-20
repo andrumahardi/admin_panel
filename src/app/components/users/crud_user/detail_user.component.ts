@@ -4,13 +4,12 @@ import {
     FormControl,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
+import { ActivatedRoute } from "@angular/router";
 import { Helpers } from "src/app/app.helpers";
 import { Generics } from "src/app/models/generics";
 
 import { UserService } from "src/app/service/user.service";
-import { ConfirmUpdateDialog, EmailVerificationSent, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
+import { ConfirmUpdateDialog, ActionSuccess, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 
 @Component({
     selector: "app-detail-user",
@@ -28,43 +27,22 @@ export class DetailUser{
     constructor(
         private userService: UserService,
         private route: ActivatedRoute,
-        private cookieService: CookieService,
         private dialog: MatDialog
     ) {
-        this.fetchRequiredData()
+        this.getDetailUser()
     }
 
-    private async fetchRequiredData(): Promise<void> {
-        try {
-            this.loading = true
-
-            await Promise.all([
-                this.getDetailUser()
-            ])
-        }
-        catch(err) {
-            this.errorPopUpGenerator(err)
-        }
-        finally{
-            this.loading = false
-        }
-    }
-
-    private getDetailUser(): Promise<any> {
-        return new Promise((resolve, reject) => {
+    private getDetailUser(): void {
+        const promise = new Promise<number>((resolve) => {
             this.route.paramMap
-                .subscribe(async ({ params }: Generics): Promise<void> => {
-                    
-                    this.userService.getUser(params.id)
-                        .subscribe((data: Generics): void => {
-
-                            this.detailUser = data
-                            this.setControlStates(data)
-                            resolve(true)
-
-                        }, (error: HttpErrorResponse): void => reject(error))
-                })
+                .subscribe(({ params }: Generics) => resolve(params.id))
         })
+        promise.then(async (id: number) => {
+            const data = await this.userService.getUser(id)
+            this.detailUser = data
+            this.setControlStates(data)
+        })
+        .catch((error) => this.errorPopUpGenerator(error))
     }
 
     async update(eventPayload: {[key: string]: FormControl} ): Promise<void> {
@@ -101,8 +79,9 @@ export class DetailUser{
             }
 
             this.setControlStates(newFormControlValues)
-            const currentUserID = this.cookieService.get("user_id")
-            if (data.id === +currentUserID) {
+
+            const currentUserID: number = Number(localStorage.getItem("user_id"))
+            if (data.id === currentUserID) {
                 this.userService.setLoggedinUser(data)
             }
 
@@ -133,8 +112,10 @@ export class DetailUser{
             promise.then(async (confirmed: boolean) => {
                     if (confirmed) {
                         this.loading = true
+                        
                         await this.userService.doConfirmUser({ email })
-                        this.dialog.open(EmailVerificationSent, { data: { email } })
+                        const message = `Email verification has been sent to ${email}`
+                        this.dialog.open(ActionSuccess, { data: { message } })
                     }
                 })
                 .catch((error) => this.errorPopUpGenerator(error))

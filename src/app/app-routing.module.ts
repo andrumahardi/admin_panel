@@ -9,16 +9,27 @@ import { LoginComponent } from './screens/login/login.component';
 import { CreateUser } from "src/app/components/users/crud_user/create_user.component"
 import { CreateMenu } from './components/menus/crud_menu/create_menu.component';
 import { ActivationUser } from './screens/activation_user/activation_user.component';
-import { HomeChildComponent } from './components/home/home.component';
+import { HomeChildComponent } from './components/home/home_child.component';
 import { RoleList } from './components/roles/rolelist/rolelist.component';
 import { CreateRole } from './components/roles/crud_role/create_role.component';
 import { DetailRole } from './components/roles/crud_role/detail_role.component';
+import { LoginChildComponent } from './components/login/login_child.component';
+import { ForgotPassword } from './components/forgot_password/forgot_password.component';
+import { ChangePassword } from './components/change_password/change_password.component';
 
 const routes: Routes = [
-  { path: "login", component: LoginComponent },
   { path: "activation/:id/:token", component: ActivationUser },
   { 
-    path: "", 
+    path: "auth", 
+    component: LoginComponent,
+    children: [
+      { path: "login", component: LoginChildComponent, pathMatch: "full" },
+      { path: "forgot_password", component: ForgotPassword, pathMatch: "full" },
+      { path: ":id/change_password", component: ChangePassword }
+    ] 
+  },
+  { 
+    path: "",
     component: HomeComponent, 
     canActivate: [RouterGuard],
     children: [
@@ -30,7 +41,8 @@ const routes: Routes = [
       { path: "user/:id", component: DetailUser },
       { path: "role", component: RoleList, pathMatch: "full" },
       { path: "role/create", component: CreateRole },
-      { path: "role/:id", component: DetailRole }
+      { path: "role/:id", component: DetailRole },
+      { path: "", redirectTo: "/home", pathMatch: "full" }
     ]
   }
 ]

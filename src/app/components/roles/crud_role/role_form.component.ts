@@ -8,8 +8,10 @@ import {
 } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
-import { ArrayOfObjects, Generics } from "src/app/models/generics";
+import { ArrayOfObjects, Generics, PaginatedListResult } from "src/app/models/generics";
+import { MenuService } from "src/app/service/menu.service";
 import { RoleService } from "src/app/service/role.service";
+import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 
 
 @Component({
@@ -26,8 +28,7 @@ export class RoleForm implements OnChanges{
     @Output() submitEvent = new EventEmitter<{[key: string]: FormControl}>()
     @Output() cancelEvent = new EventEmitter<void>()
 
-    // listTenants: Array<Generics> = []
-    // listRoles: Array<Generics> = []
+    listMenus: Array<Generics> = []
 
     readonly errorMessages = {
         required: "This field is required!",
@@ -37,9 +38,10 @@ export class RoleForm implements OnChanges{
 
     constructor(
         private store: Store<AppState>,
-        private roleService: RoleService
+        private roleService: RoleService,
+        private menuService: MenuService
     ) {
-        // this.fetchRequiredData()
+        this.getMenus()
     }
 
     ngOnChanges(event: SimpleChanges) {
@@ -54,12 +56,24 @@ export class RoleForm implements OnChanges{
         }
     }
 
-    // private fetchRequiredData(): void {
-    //     this.getListRoles()
-    //     Promise.all([
-    //         this.getListTenants(),
-    //     ])
-    // }
+    private getMenus(): void {
+        const promise = new Promise<ArrayOfObjects>((resolve, reject) => {
+            this.store.select("dropdownItems")
+                .subscribe((data: ArrayOfObjects) => resolve(data))
+        })
+        promise.then(async (data: ArrayOfObjects) => {
+            if (!data.menuList[0]) {
+                const data = await this.menuService.getList("purpose=dropdown")
+
+                this.listMenus = this.menuService.organizeMenu(data.results)
+                this.store.dispatch(DropdownListActions.setMenuList({ payload: this.listMenus }))
+            }
+            else {
+                this.listMenus = data.menuList
+            }
+        })
+            .catch((error) => {})
+    }
 
     readonly formControl: {[key: string]: FormControl} = {
         is_active: new FormControl({ value: "", disabled: true }),
@@ -91,7 +105,6 @@ export class RoleForm implements OnChanges{
     //         }
     //         else this.listRoles = data.roleList
     //     })
-    //     .catch((err) => console.log(err))
     // }
 
     onSubmit(): void {

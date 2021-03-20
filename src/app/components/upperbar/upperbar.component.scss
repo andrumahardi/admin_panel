@@ -55,6 +55,11 @@ p, a, button{
         background: white;
         z-index: 3;
 
+        p{
+            width: 100%;
+            word-break: break-word;
+        }
+
         p:first-child{
             margin-top: 0.5rem;
         }
@@ -68,11 +73,23 @@ p, a, button{
 }
 
 .profilebtns{
-    @include main.flexbox(row, center, unset);
+    @include main.flexbox(column, center, unset);
     margin-top: 0.5rem;
-    padding-top: 0.5rem;
     border-top: 1px solid black;
     width: 100%;
+
+    button.inline-btns {
+        border: none;
+        background: transparent;
+        text-align: end;
+        margin: 1px 0;
+        padding: 0.5rem;
+
+        &:hover {
+            border-left: 0.5rem solid #e28f12;
+            color: #e28f12;
+        }
+    }
 }
 
 .outline-primary-btn{

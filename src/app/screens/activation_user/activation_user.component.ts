@@ -23,7 +23,9 @@ import { UserService } from "src/app/service/user.service";
                 Confirmation Failed ;(
             </h3>
             <p style="font-size: 12pt;">
-                Please tell our support center. We will be happy to help you
+                You may have been activated earlier.
+                Please tell our support center. 
+                We will be happy to help you
             </p>
         </div>
         <div 
@@ -44,8 +46,7 @@ export class ActivationUser implements OnInit{
 
     constructor(
         private route: ActivatedRoute,
-        private userService: UserService,
-        private router: Router
+        private userService: UserService
     ){}
 
     ngOnInit(): void {
@@ -56,7 +57,7 @@ export class ActivationUser implements OnInit{
     }
 
     private async activationProcess(id: number, token: string): Promise<void> {
-        this.userService.doActivate({ is_confirmed: true }, id, `Token ${token}`)
+        this.userService.doActivate(id, `Token ${token}`)
             .then(() => this.confirmationSuccess = true)
             .catch(() => this.confirmationFailed = true)
     }
