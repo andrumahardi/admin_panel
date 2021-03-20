@@ -1,9 +1,6 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http"
+import { HttpErrorResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { Store } from "@ngrx/store"
-import { CookieService } from "ngx-cookie-service"
-import { AppState } from "../app.states"
-import { Generics, PaginatedListResult } from "../models/generics"
+import { ArrayOfObjects, Generics, PaginatedListResult } from "../models/generics"
 import { Menu } from "../models/menus"
 import { ConfigService } from "./config.service"
 import * as UserActions from "../actions/user.actions"
@@ -26,6 +23,20 @@ export class MenuService extends ConfigService {
                     const { body } = data
                     resolve(body)
                 }, (error: HttpErrorResponse): void => reject(error))
+        })
+    }
+
+    getAll(): Promise<Array<Generics>> {
+        const url = `${this.baseEndpoint}get_all`
+
+        return new Promise<Array<Generics>>((resolve, reject) => {
+            this.http.get(url, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}`
+            }})
+                .subscribe((data: Generics) => {
+                    resolve(this.organizeMenu(data.body.results))
+                },
+                (error: HttpErrorResponse) => reject(error))
         })
     }
 

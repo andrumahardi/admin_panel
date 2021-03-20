@@ -4,10 +4,14 @@ import {
     FormControl,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Generics } from "src/app/models/generics";
-
-import { UserService } from "src/app/service/user.service";
+import { select, Store } from "@ngrx/store";
+import { AppState } from "src/app/app.states";
+import { ArrayOfObjects, Generics } from "src/app/models/generics";
+import { MenuService } from "src/app/service/menu.service";
 import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
+import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
+import { ActivatedRoute } from "@angular/router";
+import { RoleService } from "src/app/service/role.service";
 
 @Component({
     selector: "app-detail-role",
@@ -16,98 +20,103 @@ import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confir
 })
 
 export class DetailRole{
+    detailRole: Generics = {}
+    formControlData: Generics = {}
+    listMenus: Array<Generics> = []
+    
     editMode: boolean = false
     loading: boolean = false
 
-    detailRole: Generics = {}
-    formControlData: Generics = {}
-
     constructor(
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private store: Store<AppState>,
+        private menuService: MenuService,
+        private roleService: RoleService,
+        private route: ActivatedRoute
     ) {
-        this.fetchRequiredData()
+        this.getMenus()
+        this.getDetailRole()
     }
 
-    private async fetchRequiredData(): Promise<void> {
-        // try {
-        //     this.loading = true
+    private getMenus(): void {
+        const promise = new Promise<ArrayOfObjects>((resolve) => {
+            this.store.select("dropdownItems")
+                .subscribe((data: ArrayOfObjects) => resolve(data))
+        })
+        promise.then(async (data: ArrayOfObjects) => {
+            if (!data.menuList[0]) {
+                const menus: Array<Generics> = await this.menuService.getAll()
 
-        //     await Promise.all([
-        //         this.getDetailRole()
-        //     ])
-        // }
-        // catch(err) {
-        //     this.errorPopUpGenerator(err)
-        // }
-        // finally{
-        //     this.loading = false
-        // }
+                this.listMenus = menus.map(menu => {
+                    return {
+                        ...menu,
+                        selected: false,
+                        children: menu["children"].map((child: Generics) => {
+                            return {
+                                ...child,
+                                selected: false
+                            }
+                        })
+                    }
+                })
+                this.store.dispatch(DropdownListActions.setMenuList({ payload: this.listMenus }))
+            }
+            else this.listMenus = data.menuList
+        }).catch((error) => this.errorPopUpGenerator(error))
     }
 
-    private getDetailRole(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            // this.route.paramMap
-            //     .subscribe(async ({ params }: Generics): Promise<void> => {
-                    
-            //         this.roleService.getUser(params.id)
-            //             .subscribe((data: Generics): void => {
-
-            //                 this.detailUser = data
-            //                 this.setControlStates(data)
-            //                 resolve(true)
-
-            //             }, (error: HttpErrorResponse): void => reject(error))
-            //     })
+    private getDetailRole(): void {
+        const promise = new Promise<number>((resolve) => {
+            this.route.paramMap.subscribe(({ params }: Generics) => {
+                resolve(params.id)
+            })
+        })
+        promise.then((id: number) => {
+            this.roleService.getRole(id)
+            .then((data: Generics): void => {
+                this.detailRole = data
+                this.setControlStates(data)
+            })
+            .catch((error: HttpErrorResponse) => this.errorPopUpGenerator(error)) 
         })
     }
 
-    async update(eventPayload: {[key: string]: FormControl} ): Promise<void> {
-        // this.dialog.open(ConfirmUpdateDialog, { data: { confirmed: true } })
-        //     .afterClosed()
-        //     .subscribe(async (confirmed: boolean) => {
+    async update(eventPayload: Generics): Promise<void> {
+        this.loading = true
+        const roleName: string = eventPayload.formControlData.role_name.value
+        const isActive: boolean = eventPayload.formControlData.is_active.value === "active"
+        
+        const payload: Generics = {
+            role_name: roleName,
+            is_active: isActive,
+            menus: eventPayload.selectedMenus
+        }
 
-        //         if (confirmed) {
-        //             this.performUpdate(eventPayload)
-        //         }
-        //     })
-    }
+        const promise = new Promise<boolean>((resolve) => {
+            this.dialog.open(ConfirmUpdateDialog, { data: { confirmed: true } })
+                .afterClosed()
+                .subscribe(async (confirmed: boolean) => {
+                    
+                    if (confirmed) resolve(true)
+                    else resolve(false)
 
-    private async performUpdate(eventPayload: {[key: string]: FormControl}): Promise<void> {
-        // try {
-        //     this.loading = true
-
-        //     const payload: Generics = {
-        //         username: eventPayload.username.value,
-        //         first_name: eventPayload.first_name.value,
-        //         last_name: eventPayload.last_name.value,
-        //         email: eventPayload.email.value,
-        //         mobile: eventPayload.mobile.value,
-        //         role_id: eventPayload.role.value,
-        //         tenant_id: eventPayload.tenant.value
-        //     }
-        //     const data = await this.roleService.doUpdate(payload, this.detailUser["id"])
-
-        //     // after send request succeed update forms value
-        //     // and current login credential if edited user equals current user
-        //     let newFormControlValues: Generics = {}
-        //     for (const key in eventPayload) {
-        //         newFormControlValues[key] = eventPayload[key].value
-        //     }
-
-        //     this.setControlStates(newFormControlValues)
-        //     const currentUserID: number = Number(localStorage.getItem("user_id"))
-        //     if (data.id === currentUserID) {
-        //         this.roleService.setLoggedinUser(data)
-        //     }
-
-        //     this.closeForm()    
-        // }
-        // catch(err) {
-        //     this.errorPopUpGenerator(err)
-        // }
-        // finally{
-        //     this.loading = false
-        // }
+                })
+        })
+        promise.then(async (response: boolean) => {
+            if (response) {
+                await this.roleService.doUpdate(payload, this.detailRole.id)
+                
+                this.formControlData = {
+                    role_name: roleName,
+                    is_active: isActive ? "active" : "inactive"
+                }
+            } 
+        })
+            .catch((error) => this.errorPopUpGenerator(error))
+            .finally(() => {
+                this.editMode = false
+                this.loading = false
+            })
     }
 
     errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
@@ -130,6 +139,7 @@ export class DetailRole{
 
     closeForm(): void {
         this.editMode = false
+        this.setControlStates(this.detailRole)
     }
 
     setControlStates(data: Generics): void {
@@ -137,5 +147,26 @@ export class DetailRole{
             is_active: data.is_active ? "active" : "inactive",
             role_name: data.role_name
         }
+
+        this.listMenus = this.listMenus.map((menu: Generics) => {
+            let parentMenu = menu
+            if (data.menus.includes(menu.id)){
+                parentMenu = {
+                    ...menu,
+                    selected: true,
+                    children: menu.children.map((child: Generics) => {
+                        let childMenu = child
+                        if (data.menus.includes(child.id)) {
+                            childMenu = {
+                                ...child,
+                                selected: true
+                            }
+                        }
+                        return childMenu
+                    })
+                }
+            }
+            return parentMenu
+        })
     }
 }

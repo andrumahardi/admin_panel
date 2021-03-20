@@ -62,9 +62,6 @@ export class UpperBar {
 
     async logout(): Promise<void> {
         await this.userService.doLogout()
-        localStorage.removeItem("token")
-        localStorage.removeItem("user_id")
-
         this.router.navigate(["/auth/login"])
     }
 

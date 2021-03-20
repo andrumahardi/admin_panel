@@ -3,6 +3,10 @@
 $buttons-width: 6rem;
 $light-grey: #737373;
 
+::ng-deep .mat-checkbox-label, label{
+    color: #6f6f6f !important;
+}
+
 #form-section{
     box-shadow: 0.2rem 0.2rem 0.5rem #9a9a9a;
     padding: 1rem;
@@ -20,7 +24,7 @@ $light-grey: #737373;
 }
 
 .formcomponent{
-    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: auto auto);
+    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: 30% auto);
 
     .mat-form-field{
         width: 100%;
@@ -31,6 +35,22 @@ $light-grey: #737373;
         font-size: 10pt;
     }
 
+}
+
+.nestedmenu{
+    &__label{
+        font-weight: bold;
+        display: block;
+        text-align: center;
+        border-bottom: 1px solid #d0d0d0;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    &__container{
+        @include main.flexbox($wrap: wrap);
+        height: 27rem;
+        margin-bottom: 1rem;
+    }
 }
 
 ::ng-deep .mat-option-text {
@@ -46,7 +66,13 @@ $buttons: ("primary" "cancel" "green");
 }
 
 @media screen and (max-width: 768px) {
-    .formcontrols {
-        @include main.gridview($coltemplate: auto);
+    .formcomponent {
+        @include main.gridview($coltemplate: 100%);
+    }
+
+    .nestedmenu{
+        &__container{
+            height: unset;
+        }
     }
 }

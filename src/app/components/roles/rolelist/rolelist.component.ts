@@ -54,23 +54,26 @@ export class RoleList extends Paginator {
         this.getPaginationData(this.roleService, this.dialog)
     }
 
-    confirmOnDelete(id: number) {
-        this.dialog.open(ConfirmDeleteDialog, { data: { id }})
+    performDelete(id: number) {
+        const promise = new Promise<number | undefined>((resolve) => {
+            this.dialog.open(ConfirmDeleteDialog, { data: { id }})
             .afterClosed()
-            .subscribe((res: number | undefined) => {
+            .subscribe((res: number) => {
                 if (res) {
-                    // this.performDelete(id)
-                }
+                    resolve(id)
+                } else resolve(undefined)
             })
-    }
+        })
+        promise.then(async (id: number | undefined) => {
+            if (id) {
+                this.loading = true
+                await this.roleService.doDestroy(id)
 
-    performDelete(id: number): void {
-        // this.loading = true  
-        // this.roleService.doDestroy(id)
-        //     .then(() => {
-        //         this.getPaginationData(this.roleService, this.dialog)
-        //     })
-        //     .catch((err) => this.errorPopUpGenerator(err, this.dialog))
-        //     .finally(() => this.loading = false)
+                this.getPaginationData(this.roleService, this.dialog)
+            }
+        })
+            .catch((error) => this.errorPopUpGenerator(error, this.dialog))
+            .finally(() => this.loading = false)
+
     }
 }

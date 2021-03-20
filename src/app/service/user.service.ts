@@ -99,7 +99,12 @@ export class UserService extends ConfigService {
         return new Promise<boolean>((resolve) => {
             this.http.get(url, { observe: "response", headers: {
                 authorization: token
-            }}).subscribe(() => resolve(true))
+            }})
+                .subscribe(() => {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("user_id")
+                    resolve(true)
+                })
         })
     }
 

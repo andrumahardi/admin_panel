@@ -17,6 +17,7 @@ import { MatSelectModule } from "@angular/material/select"
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatSortModule } from "@angular/material/sort"
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatCheckboxModule } from "@angular/material/checkbox"
 
 // Routing modules
 import { AppRoutingModule } from './app-routing.module';
@@ -111,6 +112,7 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
     MatDialogModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     BrowserAnimationsModule
   ],
   providers: [ CookieService, RouterGuard ],

@@ -11,6 +11,7 @@ p, a, button{
     position: relative;
     height: main.$upperbar-height;
     padding: 0 $nav-padding;
+    z-index: 1;
     box-shadow: 0.1rem 0.1rem 0.5rem main.$black-opaque;
     @include main.flexbox(row, space-between, center);
 

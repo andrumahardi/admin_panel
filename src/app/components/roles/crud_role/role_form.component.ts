@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 import { 
-    AbstractControl, 
-    FormControl, 
-    ValidationErrors, 
-    ValidatorFn, 
-    Validators 
-} from "@angular/forms";
+    Component, 
+    EventEmitter, 
+    Input, 
+    OnChanges, 
+    Output, 
+    SimpleChanges 
+} from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
-import { ArrayOfObjects, Generics, PaginatedListResult } from "src/app/models/generics";
+import { Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
 import { RoleService } from "src/app/service/role.service";
-import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 
 
 @Component({
@@ -21,98 +21,110 @@ import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 })
 
 export class RoleForm implements OnChanges{
-    @Input() data: Generics = {}
+    @Input() formControlData: Generics = {}
     @Input() disableState: boolean = false
     @Input() forEdit: boolean = false
+    @Input() listMenus: Array<Generics> = []
 
-    @Output() submitEvent = new EventEmitter<{[key: string]: FormControl}>()
-    @Output() cancelEvent = new EventEmitter<void>()
+    @Output() submitEvent: EventEmitter<Generics> = new EventEmitter<Generics>()
+    @Output() cancelEvent: EventEmitter<void> = new EventEmitter<void>()
 
-    listMenus: Array<Generics> = []
 
     readonly errorMessages = {
         required: "This field is required!",
-        maxlength: "Characters should not exceed 20 letters",
-        minlength: "Characters too short ( < 5 letters )"
-    }
-
-    constructor(
-        private store: Store<AppState>,
-        private roleService: RoleService,
-        private menuService: MenuService
-    ) {
-        this.getMenus()
+        maxlength: "Characters too long"
     }
 
     ngOnChanges(event: SimpleChanges) {
         if (event.disableState) {
             this.disableState = event.disableState.currentValue
 
-            this.setControlStates(this.data)
+            this.setControlStates(this.formControlData)
         }
-
-        if (event.data) {
-            this.setControlStates(event.data.currentValue)
+        if (event.formControlData) {
+            this.setControlStates(event.formControlData.currentValue)
         }
-    }
-
-    private getMenus(): void {
-        const promise = new Promise<ArrayOfObjects>((resolve, reject) => {
-            this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects) => resolve(data))
-        })
-        promise.then(async (data: ArrayOfObjects) => {
-            if (!data.menuList[0]) {
-                const data = await this.menuService.getList("purpose=dropdown")
-
-                this.listMenus = this.menuService.organizeMenu(data.results)
-                this.store.dispatch(DropdownListActions.setMenuList({ payload: this.listMenus }))
-            }
-            else {
-                this.listMenus = data.menuList
-            }
-        })
-            .catch((error) => {})
+        if (event.listMenus) {
+            this.listMenus = event.listMenus.currentValue
+        }
     }
 
     readonly formControl: {[key: string]: FormControl} = {
         is_active: new FormControl({ value: "", disabled: true }),
         role_name: new FormControl({ value: "", disabled: true }, [
-            Validators.required
+            Validators.required,
+            Validators.maxLength(20)
         ]),
     }
+    
+    setAllChecked(selected: boolean, index: number) {
+        this.listMenus = this.listMenus.map((menu: Generics, i: number) => {
+            if (i === index) {
+                menu = {
+                    ...menu,
+                    selected,
+                    children: menu["children"].map((child: Generics) => {
+                        return {
+                            ...child,
+                            selected
+                        }
+                    })
+                }
+            }
+            return menu
+        })
+    }
 
-    // private getListTenants(): Promise<boolean> {
-    //     return new Promise((resolve, _) => {
-    //         this.store.select("dropdownItems")
-    //             .subscribe((data: ArrayOfObjects): void => {
-    //                 this.listTenants = data.tenantList
-    //                 resolve(true)
-    //             })
-    //     })
-    // }
+    toggleParentChecked(selected: boolean, parentPos: number, childPos: number) {
+        // Define child menu
+        this.listMenus = this.listMenus.map((menu: Generics, i) => {
+            let parentMenu: Generics = menu
+            if (i === parentPos) {
+                parentMenu = {
+                    ...menu,
+                    children: menu.children.map((child: Generics, j: number) => {
+                        let childMenu: Generics = child
+                        if (j === childPos) {
+                            childMenu = {
+                                ...child,
+                                selected
+                            }
+                        }
+                        return childMenu
+                    })
+                }
+            }
+            return parentMenu
+        })
 
-    // private getListRoles(): void {
-    //     const promise = new Promise<ArrayOfObjects>((resolve, _) => {
-    //         this.store.select("dropdownItems")
-    //             .subscribe((data: ArrayOfObjects): void => resolve(data))
-    //     })
-    //     promise.then(async (data: ArrayOfObjects) => {
-    //         if (!data.roleList[0]) {
-    //             const { results }: Generics = await this.roleService.getList("purpose=dropdown")
-    //             this.store.dispatch(DropdownListActions.setRoleList({ payload: results }))
-    //             this.listRoles = results
-    //         }
-    //         else this.listRoles = data.roleList
-    //     })
-    // }
+        // Define parent menu
+        this.listMenus = this.listMenus.map((menu: Generics, i: number) => {
+            let parentMenu: Generics = menu
+            if (i === parentPos) {
+                const someChildChecked = menu.children.some((child: Generics) => child.selected)
+                parentMenu = {
+                    ...menu,
+                    selected: someChildChecked
+                }
+            }
+            return parentMenu
+        })
+    }
 
     onSubmit(): void {
         const formValid: boolean = Object.values(this.formControl)
             .every((control) => !control.errors)
         
-        if(formValid) {
-            this.submitEvent.emit(this.formControl) 
+        if (formValid) {
+            let selectedMenuIDs: Array<number> = []
+            this.listMenus.forEach((menu: Generics) => {
+                if (menu.selected) selectedMenuIDs.push(menu.id)
+                menu.children.forEach((child: Generics) => {
+                    if (child.selected) selectedMenuIDs.push(child.id)
+                })
+            })
+
+            this.submitEvent.emit({ formControlData: this.formControl, selectedMenus: selectedMenuIDs }) 
         }
     }
 
@@ -122,19 +134,5 @@ export class RoleForm implements OnChanges{
         for (const key in this.formControl) {
             this.formControl[key].reset({ value: data[key], disabled: this.disableState })
         }
-    }
-}
-
-class CustomValidator extends Validators{
-    static mobilepattern(): ValidatorFn {
-        return CustomValidator.generateMobilePatternError
-    }
-
-    static generateMobilePatternError(control: AbstractControl): ValidationErrors | null {
-        const pattern = /[^0-9]/ig
-        const mobilephoneValid: boolean = (control.value.search(pattern) === -1)
-
-        if (mobilephoneValid) return null
-        return {mobilepattern: true}
     }
 }

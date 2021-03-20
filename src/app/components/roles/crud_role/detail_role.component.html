@@ -16,7 +16,8 @@
             </div>
         </header>
         <app-role-form
-            [data]="formControlData"
+            [formControlData]="formControlData"
+            [listMenus]="listMenus"
             [forEdit]="true"
             [disableState]="!editMode"
             (cancelEvent)="closeForm()"

@@ -1,7 +1,7 @@
 <form (ngSubmit)="onSubmit()">
     <div class="formcomponent">
-
-        <div class="input">
+        
+        <div>
             <mat-form-field appearance="outline">
                 <mat-label>Role name</mat-label>
                 <input 
@@ -12,13 +12,14 @@
                 <mat-error *ngIf="formControl.role_name.hasError('required')">
                     {{errorMessages.required}}
                 </mat-error>
+                <mat-error *ngIf="formControl.role_name.hasError('maxlength')">
+                    {{errorMessages.maxlength}}
+                </mat-error>
             </mat-form-field>
-        </div>
-        
-        <div class="input">
-            <mat-form-field appearance="outline">
+
+            <mat-form-field *ngIf="forEdit" appearance="outline">
                 <mat-label>Status</mat-label>
-                <mat-select 
+                <mat-select
                     name="is_active"
                     [formControl]="formControl.is_active">
                     <mat-option value="active"> Active </mat-option>
@@ -27,8 +28,36 @@
             </mat-form-field>
         </div>
 
+        <div class="nestedmenu">
+            <label class="nestedmenu__label">
+                Privileged Menu
+            </label>
+            <div class="nestedmenu__container">
+                <div *ngFor="let menu of listMenus; index as i;">
+                    <mat-checkbox
+                        [disabled]="disableState"
+                        [checked]="menu.selected"
+                        color="primary"
+                        (change)="setAllChecked($event.checked, i)">
+                            {{ menu.menu_name }}
+                    </mat-checkbox>
+
+                    <div 
+                        *ngFor="let child of menu.children; index as j" 
+                        style="margin-left: 2rem;">
+                        <mat-checkbox
+                            name="child.id"
+                            [disabled]="disableState"
+                            [checked]="child.selected"
+                            (change)="toggleParentChecked($event.checked, i, j)">
+                                {{ child.menu_name }}
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div *ngIf="!disableState" class="btn-group">
+    <div *ngIf="!disableState">
         <button 
             type="submit" 
             class="full-primary-btn">

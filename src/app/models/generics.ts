@@ -4,7 +4,7 @@ export interface PaginatedListResult {
 }
 
 export interface Generics {
-    [key: string]: any
+    [key: string]: any | Array<any>
 }
 
 export interface DropdownItemActionTypes {

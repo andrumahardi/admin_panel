@@ -8,7 +8,8 @@
             <h3>Create Role</h3>
         </header>
         <app-role-form
-            [data]="formControlData"
+            [formControlData]="formControlData"
+            [listMenus]="listMenus"
             [forEdit]="false"
             [disableState]="false"
             (cancelEvent)="closeForm()"
