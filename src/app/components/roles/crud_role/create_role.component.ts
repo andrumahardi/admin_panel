@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { ArrayOfObjects, Generics } from "src/app/models/generics";
+import { ArraysInObject, Generics } from "src/app/models/generics";
 import { RoleService } from "src/app/service/role.service";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 
@@ -54,36 +54,42 @@ export class CreateRole {
             is_active: "active",
             role_name: ""
         }
-        this.listMenus = []
+        this.resetListMenus(this.listMenus)
     }
 
     private getMenus(): void {
-        const promise = new Promise<ArrayOfObjects>((resolve, reject) => {
+        const promise = new Promise<ArraysInObject>((resolve, reject) => {
             this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects) => resolve(data))
+                .subscribe((data: ArraysInObject) => resolve(data))
         })
-        promise.then(async (data: ArrayOfObjects) => {
+        promise.then(async (data: ArraysInObject) => {
             if (!data.menuList[0]) {
-                const menus: Array<Generics> = await this.menuService.getAll()
 
-                this.listMenus = menus.map(menu => {
-                    return {
-                        ...menu,
-                        selected: false,
-                        children: menu["children"].map((child: Generics) => {
-                            return {
-                                ...child,
-                                selected: false
-                            }
-                        })
-                    }
-                })
-                this.store.dispatch(DropdownListActions.setMenuList({ payload: this.listMenus }))
+                const menus: Array<Generics> = await this.menuService.getAll()
+                const nestedMenus = this.menuService.organizeMenu(menus)
+                this.store.dispatch(DropdownListActions.setMenuList({ payload: menus }))
+
+                this.listMenus = nestedMenus
             }
-            else this.listMenus = data.menuList
+            else this.listMenus = this.menuService.organizeMenu(data.menuList)
             this.setControlStates()
 
         }).catch((error) => this.errorPopUpGenerator(error))
+    }
+    
+    resetListMenus(data: Array<Generics>): void {
+        this.listMenus = data.map((menu: Generics) => {
+            return {
+                ...menu,
+                selected: false,
+                children: menu.children.map((child: Generics) => {
+                    return {
+                        ...child,
+                        selected: false
+                    }
+                })
+            }
+        })
     }
 
     errorPopUpGenerator({ error, status }: HttpErrorResponse): void {

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { ArrayOfObjects, Generics, PaginatedListResult } from "../models/generics"
+import { ArraysInObject, Generics, PaginatedListResult } from "../models/generics"
 import { ConfigService } from "./config.service"
 
 @Injectable({
@@ -23,10 +23,10 @@ export class RoleService extends ConfigService {
         })
     }
 
-    getAll(): Promise<ArrayOfObjects> {
+    getAll(): Promise<ArraysInObject> {
         const url = `${this.baseEndpoint}get_all`
 
-        return new Promise<ArrayOfObjects>((resolve, reject) => {
+        return new Promise<ArraysInObject>((resolve, reject) => {
             this.http.get(url, { observe: "response", headers: {
                 authorization: `Token ${this.getAccessToken()}`
             }})

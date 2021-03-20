@@ -8,7 +8,7 @@ import {
 } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
-import { ArrayOfObjects, Generics } from "src/app/models/generics";
+import { ArraysInObject, Generics } from "src/app/models/generics";
 import { RoleService } from "src/app/service/role.service";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions"
 import { TenantService } from "src/app/service/tenant.service";
@@ -101,12 +101,12 @@ export class UserForm implements OnChanges{
     }
 
     private getListRoles(): void {
-        const promise = new Promise<ArrayOfObjects>((resolve, _) => {
+        const promise = new Promise<ArraysInObject>((resolve, _) => {
             this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects): void => resolve(data))
+                .subscribe((data: ArraysInObject): void => resolve(data))
         })
         promise
-            .then(async (data: ArrayOfObjects) => {
+            .then(async (data: ArraysInObject) => {
                 if (!data.roleList[0]) {
                     const { results }: Generics = await this.roleService.getAll()
                     this.store.dispatch(DropdownListActions.setRoleList({ payload: results }))
@@ -118,12 +118,12 @@ export class UserForm implements OnChanges{
     }
 
     private getListTenants(): void {
-        const promise = new Promise<ArrayOfObjects>((resolve, _) => {
+        const promise = new Promise<ArraysInObject>((resolve, _) => {
             this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects): void => resolve(data))
+                .subscribe((data: ArraysInObject): void => resolve(data))
         })
         promise
-            .then(async (data: ArrayOfObjects) => {
+            .then(async (data: ArraysInObject) => {
                 if (!data.tenantList[0]) {
                     const { results }: Generics = await this.tenantService.getAll()
                     this.store.dispatch(DropdownListActions.setTenantList({ payload: results }))

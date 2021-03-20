@@ -32,34 +32,14 @@ export class CreateMenu{
 
     create(eventPayload: {[key: string]: FormControl}): void {
         const payload: Generics = {
-            username: eventPayload.username.value,
-            first_name: eventPayload.first_name.value,
-            last_name: eventPayload.last_name.value,
-            email: eventPayload.email.value,
-            mobile: eventPayload.mobile.value,
-            role_id: eventPayload.role.value,
-            tenant_id: eventPayload.tenant.value,
-            password: eventPayload.password.value
+            menu_name: eventPayload.menu_name.value,
+            menu_seq: eventPayload.menu_seq.value,
+            parent_id: eventPayload.parent.value,
+            description: eventPayload.description.value,
+            menu_path_url: eventPayload.menu_path_url.value
         }
-        this.performCreate(payload)
-    }
 
-    async performCreate(payload: Generics): Promise<void> {
-        try {
-            // await this.menuService.doRegister(payload)
-            // this.router.navigate(["user"])
-        }
-        catch({ error, status }) {
-            let message = ""
-            if (status === 400) {
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-            }
-            else message = "Server could not process data"
-            this.dialog.open(ErrorPopup, { data: { message }})
-        }
+        console.log(payload)
     }
 
     setControlStates(): void {

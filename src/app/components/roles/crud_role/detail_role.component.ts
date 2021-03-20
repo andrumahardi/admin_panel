@@ -1,12 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { 
-    FormControl,
-} from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { select, Store } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
-import { ArrayOfObjects, Generics } from "src/app/models/generics";
+import { ArraysInObject, Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
 import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
@@ -39,15 +36,18 @@ export class DetailRole{
     }
 
     private getMenus(): void {
-        const promise = new Promise<ArrayOfObjects>((resolve) => {
+        const promise = new Promise<ArraysInObject>((resolve) => {
             this.store.select("dropdownItems")
-                .subscribe((data: ArrayOfObjects) => resolve(data))
+                .subscribe((data: ArraysInObject) => resolve(data))
         })
-        promise.then(async (data: ArrayOfObjects) => {
+        promise.then(async (data: ArraysInObject) => {
             if (!data.menuList[0]) {
                 const menus: Array<Generics> = await this.menuService.getAll()
+                const nestedMenuList = this.menuService.organizeMenu(menus)
 
-                this.listMenus = menus.map(menu => {
+                this.store.dispatch(DropdownListActions.setMenuList({ payload: menus }))
+
+                this.listMenus = nestedMenuList.map(menu => {
                     return {
                         ...menu,
                         selected: false,
@@ -59,9 +59,8 @@ export class DetailRole{
                         })
                     }
                 })
-                this.store.dispatch(DropdownListActions.setMenuList({ payload: this.listMenus }))
             }
-            else this.listMenus = data.menuList
+            else this.listMenus = this.menuService.organizeMenu(data.menuList)
         }).catch((error) => this.errorPopUpGenerator(error))
     }
 

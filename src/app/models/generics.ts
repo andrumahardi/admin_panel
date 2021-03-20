@@ -13,6 +13,6 @@ export interface DropdownItemActionTypes {
     SET_MENU_LIST: string
 }
 
-export interface ArrayOfObjects {
+export interface ArraysInObject {
     [key: string]: Array<Generics>
 }

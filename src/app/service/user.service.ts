@@ -96,15 +96,12 @@ export class UserService extends ConfigService {
         const url = `${this.baseEndpoint}logout`
         const token = `Token ${this.getAccessToken()}`
         
+        localStorage.removeItem("token")
+        localStorage.removeItem("user_id")
         return new Promise<boolean>((resolve) => {
             this.http.get(url, { observe: "response", headers: {
                 authorization: token
-            }})
-                .subscribe(() => {
-                    localStorage.removeItem("token")
-                    localStorage.removeItem("user_id")
-                    resolve(true)
-                })
+            }}).subscribe(() => resolve(true))
         })
     }
 

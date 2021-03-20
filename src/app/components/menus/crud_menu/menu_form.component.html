@@ -1,60 +1,81 @@
 <form (ngSubmit)="onSubmit()">
     <div class="formcomponent">
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Menu Sequence</mat-label>
-                <input
-                    type="text"
-                    name="menu_seq"
-                    [formControl]="formControl.menu_seq"
-                    matInput>
-            </mat-form-field>
-        </div>
-        
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Menu Name</mat-label>
-                <input
-                    type="text"
-                    name="menu_name"
-                    [formControl]="formControl.menu_name"
-                    matInput>
-            </mat-form-field>
+        <div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Menu Sequence</mat-label>
+                    <input
+                        type="number"
+                        name="menu_seq"
+                        [formControl]="formControl.menu_seq"
+                        matInput>
+                    <mat-error *ngIf="formControl.menu_seq.hasError('required')">
+                        {{errorMessages.required}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.menu_seq.hasError('min')">
+                        {{errorMessages.min}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Menu Name</mat-label>
+                    <input
+                        type="text"
+                        name="menu_name"
+                        [formControl]="formControl.menu_name"
+                        matInput>
+                    <mat-error *ngIf="formControl.menu_name.hasError('required')">
+                        {{errorMessages.required}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.menu_name.hasError('minlength')">
+                        {{errorMessages.minlength}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.menu_name.hasError('maxlength')">
+                        {{errorMessages.maxlength}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Menu Url</mat-label>
+                    <input
+                        type="text"
+                        name="menu_path_url"
+                        [formControl]="formControl.menu_path_url"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Parent Menu</mat-label>
+                    <mat-select 
+                        name="parent"
+                        [formControl]="formControl.parent">
+                        <mat-option 
+                            *ngFor="let parent of menuList" 
+                            [value]="parent.id.toString()">{{ parent.menu_name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Menu Url</mat-label>
-                <input
-                    type="text"
-                    name="menu_path_url"
-                    [formControl]="formControl.menu_path_url"
-                    matInput>
-            </mat-form-field>
-        </div>
-
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Parent Menu</mat-label>
-                <input
-                    type="text"
-                    name="parent"
-                    [formControl]="formControl.parent"
-                    matInput>
-            </mat-form-field>
-        </div>
-
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Description</mat-label>
-                <textarea
-                    matInput
-                    name="description"
-                    [formControl]="formControl.description"></textarea>
-              </mat-form-field>
+        <div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <textarea
+                        matInput
+                        name="description"
+                        [formControl]="formControl.description"></textarea>
+                  </mat-form-field>
+            </div>
         </div>
     </div>
-    <div *ngIf="!disableState" class="btn-group">
+    <div *ngIf="!disableState">
         <button 
             type="submit" 
             class="full-primary-btn">

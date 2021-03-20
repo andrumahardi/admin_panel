@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { ArrayOfObjects, Generics, PaginatedListResult } from "../models/generics"
+import { ArraysInObject, Generics, PaginatedListResult } from "../models/generics"
 import { Menu } from "../models/menus"
 import { ConfigService } from "./config.service"
 import * as UserActions from "../actions/user.actions"
@@ -34,9 +34,22 @@ export class MenuService extends ConfigService {
                 authorization: `Token ${this.getAccessToken()}`
             }})
                 .subscribe((data: Generics) => {
-                    resolve(this.organizeMenu(data.body.results))
+                    resolve(data.body.results)
                 },
                 (error: HttpErrorResponse) => reject(error))
+        })
+    }
+
+    doDestroy(id: number): Promise<boolean> {
+        const url = `${this.baseEndpoint}${id}/`
+
+        return new Promise((resolve, reject) => {
+            this.http.delete(url, { 
+                observe: "response", 
+                headers: { authorization: `Token ${this.getAccessToken()}` } 
+            })
+                .subscribe((): void => resolve(true),
+                (error: HttpErrorResponse): void => reject(error))
         })
     }
 

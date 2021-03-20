@@ -4,6 +4,7 @@ import { Paginator } from "src/app/app.helpers";
 import { MenuService } from "src/app/service/menu.service";
 import { MatSort, Sort } from "@angular/material/sort"
 import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDeleteDialog } from "../../modal_dialog/modal_confirm.component";
 
 @Component({
     selector: "app-menu-list",
@@ -18,7 +19,7 @@ export class Menulist extends Paginator {
     loading: boolean = false
 
     displayedColumns: Array<string> = [
-        "no", "name", "path_url", "action"
+        "id", "name", "path_url", "action"
     ]
 
     constructor(
@@ -26,7 +27,7 @@ export class Menulist extends Paginator {
         private dialog: MatDialog
     ) {
         super()
-        this.ordering = "menu_name"
+        this.ordering = "id"
         this.getPaginationData(this.menuService, this.dialog)
     }
 
@@ -51,6 +52,25 @@ export class Menulist extends Paginator {
         this.getPaginationData(this.menuService, this.dialog)
     }
 
-    delete(id: number): void {
+    performDelete(id: number): void {
+        const promise = new Promise<number | undefined>((resolve) => {
+            this.dialog.open(ConfirmDeleteDialog, { data: { id }})
+            .afterClosed()
+            .subscribe((res: number) => {
+                if (res) {
+                    resolve(id)
+                } else resolve(undefined)
+            })
+        })
+        promise.then(async (id: number | undefined) => {
+            if (id) {
+                this.loading = true
+                await this.menuService.doDestroy(id)
+
+                this.getPaginationData(this.menuService, this.dialog)
+            }
+        })
+            .catch((error) => this.errorPopUpGenerator(error, this.dialog))
+            .finally(() => this.loading = false)
     }
 }

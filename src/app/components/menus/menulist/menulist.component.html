@@ -1,4 +1,8 @@
-<main id="menulist-components">
+<main id="menulist-components spinner-parent">
+  <div *ngIf="loading" class="spinner--container">
+      <mat-spinner></mat-spinner>
+  </div>
+
   <section class="mat-elevation-z8">
     <header>
       <div class="btn-group">
@@ -25,9 +29,9 @@
       [dataSource]="dataSource" 
       class="mat-elevation-z8 table">
 
-      <ng-container matColumnDef="no">
-        <th mat-header-cell *matHeaderCellDef> No. </th>
-        <td mat-cell *matCellDef="let index = index;"> {{index + 1}} </td>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Menu ID </th>
+        <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
       </ng-container>
     
       <ng-container matColumnDef="name">
@@ -48,7 +52,7 @@
             <a title="edit">
               <img src="../../../assets/img/edit_ico.svg" />
             </a>
-            <a (click)="delete(element.id)" title="delete">
+            <a (click)="performDelete(element.id)" title="delete">
               <img src="../../../assets/img/trash_ico.svg" />
             </a>
 
@@ -64,7 +68,8 @@
       [length]="totalPages"
       [pageSize]="10"
       (page)="pageChange($event)"
-      [pageSizeOptions]="[10, 25, 50]">
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons>
     </mat-paginator>
   </section>
 </main>

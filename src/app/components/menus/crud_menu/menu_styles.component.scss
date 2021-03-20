@@ -3,6 +3,11 @@
 $buttons-width: 6rem;
 $light-grey: #737373;
 
+textarea {
+    height: 10rem !important;
+    resize: none !important;
+}
+
 #form-section{
     box-shadow: 0.2rem 0.2rem 0.5rem #9a9a9a;
     padding: 1rem;
@@ -10,32 +15,22 @@ $light-grey: #737373;
 
     header{
         @include main.flexbox(row, space-between);
-        h3 {
-            color: $light-grey;
-        }
         border-bottom: 1px solid lighten($color: $light-grey, $amount: 40%);
         padding-bottom: 1rem;
         margin-bottom: 1rem;
+        
+        h3 {
+            color: $light-grey;
+        }
     }
 }
 
 form{
     position: relative;
-
-    .update-detail-failed{
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        padding: 0.5rem 1rem;
-        border: 1px solid red;
-        border-radius: 0.5rem;
-        color: darkred;
-        background: white;
-    }
 }
 
 .formcomponent{
-    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: auto auto);
+    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: 40% auto);
 
     .mat-form-field{
         width: 100%;
@@ -47,7 +42,7 @@ form{
     padding-left: 1rem;
 }
 
-input, input:disabled, ::ng-deep .mat-select-value-text {
+input, input:disabled, ::ng-deep .mat-select-value-text, textarea {
     color: #737373 !important;
     font-size: 10pt;
 }
