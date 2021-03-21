@@ -81,7 +81,10 @@ export class Paginator{
 
                 this.dateParser()
             })
-            .catch((err) => this.errorPopUpGenerator(err, dialog))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
     }
 
@@ -102,22 +105,32 @@ export class Paginator{
             (this.search !== "") ? `search=${this.search}` : ""
         ].filter(param => param !== "").join("&")
     }
+}
 
-    errorPopUpGenerator({ error, status }: HttpErrorResponse, dialog: MatDialog): void {
-        let message: string = ""
+export class ErrorGenerator{
+    message: string = ""
+
+    constructor(
+        private exception: HttpErrorResponse,
+        private dialog: MatDialog
+    ){}
+
+    throwError() {
+        const { error, status }: HttpErrorResponse = this.exception
+
         switch (status) {
             case 400:
                 for (const key in error.detail) {
-                    message = error.detail[key][0]
+                    this.message = error.detail[key][0]
                     break
                 }
                 break
             case 500:
-                message = "Server could not process data"
+                this.message = "Server could not process data"
                 break
             default:
-                message = error.detail
+                this.message = error.detail
         }
-        dialog.open(ErrorPopup, { data: { message }})
+        this.dialog.open(ErrorPopup, { data: { message: this.message }})
     }
 }

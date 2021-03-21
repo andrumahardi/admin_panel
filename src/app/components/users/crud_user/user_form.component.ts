@@ -15,6 +15,7 @@ import { TenantService } from "src/app/service/tenant.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 import { MatDialog } from "@angular/material/dialog";
+import { ErrorGenerator } from "src/app/app.helpers";
 
 
 @Component({
@@ -114,7 +115,10 @@ export class UserForm implements OnChanges{
                 }
                 else this.listRoles = data.roleList
             })
-            .catch((error) => this.errorPopUpGenerator(error))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
     }
 
     private getListTenants(): void {
@@ -131,7 +135,10 @@ export class UserForm implements OnChanges{
                 }
                 else this.listTenants = data.tenantList
             })
-            .catch((error) => this.errorPopUpGenerator(error))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
     }
 
     onSubmit(): void {
@@ -154,24 +161,6 @@ export class UserForm implements OnChanges{
                 this.formControl[key].setValue(data[key])
             }
         }
-    }
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 }
 

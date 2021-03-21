@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from "@angular/core"
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, DoCheck } from "@angular/core"
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
@@ -9,6 +9,7 @@ import { MatDialog } from "@angular/material/dialog";
 import * as UserActions from "src/app/actions/user.actions"
 import { ErrorPopup } from "../modal_dialog/modal_confirm.component";
 import { Generics } from "src/app/models/generics";
+import { ErrorGenerator } from "src/app/app.helpers";
 
 @Component({
     selector: "app-upper-bar",
@@ -16,7 +17,7 @@ import { Generics } from "src/app/models/generics";
     styleUrls: [ "./upperbar.component.scss" ]
 })
 
-export class UpperBar {
+export class UpperBar{
     user: User | {[key: string]: any} = {}
     pictureUrl: string = ""
     showdropdown: boolean = false
@@ -57,7 +58,10 @@ export class UpperBar {
             }
             else this.user = states.currentUser
         })
-        .catch((error) => this.errorPopUpGenerator(error))
+        .catch((error) => {
+            const exception = new ErrorGenerator(error, this.dialog)
+            exception.throwError()
+        })
     }
 
     async logout(): Promise<void> {
@@ -67,24 +71,6 @@ export class UpperBar {
 
     changePassword(): void {
         this.router.navigate([`auth/${this.user.id}/change_password`])
-    }
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 
     toggleSidebar() {

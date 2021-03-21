@@ -1,0 +1,25 @@
+ <section class="router-container spinner--parent">
+    <div *ngIf="loading" class="spinner--container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div id="form-section">
+        <header>
+            <h3>Detail Role</h3>
+            <div *ngIf="!editMode" class="btn-group">
+                <button
+                    type="button"
+                    (click)="editMode = true"
+                    class="outline-primary-btn">
+                    Update Detail
+                </button>
+            </div>
+        </header>
+        <app-menu-form
+            [data]="formControlData"
+            [forEdit]="false"
+            [disableState]="!editMode"
+            (cancelEvent)="closeForm()"
+            (submitEvent)="update($event)"></app-menu-form>
+    </div>
+</section>

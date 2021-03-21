@@ -2,7 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
-import { Paginator } from "src/app/app.helpers";
+import { ErrorGenerator, Paginator } from "src/app/app.helpers";
 import { RoleService } from "src/app/service/role.service";
 import { ConfirmDeleteDialog } from "../../modal_dialog/modal_confirm.component";
 
@@ -72,7 +72,10 @@ export class RoleList extends Paginator {
                 this.getPaginationData(this.roleService, this.dialog)
             }
         })
-            .catch((error) => this.errorPopUpGenerator(error, this.dialog))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
 
     }

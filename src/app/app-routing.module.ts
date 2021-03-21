@@ -16,6 +16,7 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
 import { LoginChildComponent } from './components/login/login_child.component';
 import { ForgotPassword } from './components/forgot_password/forgot_password.component';
 import { ChangePassword } from './components/change_password/change_password.component';
+import { DetailMenu } from './components/menus/crud_menu/detail_menu.component';
 
 const routes: Routes = [
   { path: "activation/:id/:token", component: ActivationUser },
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: "home", component: HomeChildComponent, pathMatch: "full" },
       { path: "menu", component: Menulist, pathMatch: "full" },
       { path: "menu/create", component: CreateMenu },
+      { path: "menu/:id", component: DetailMenu },
       { path: "user", component: UserList, pathMatch: "full" },
       { path: "user/create", component: CreateUser },
       { path: "user/:id", component: DetailUser },

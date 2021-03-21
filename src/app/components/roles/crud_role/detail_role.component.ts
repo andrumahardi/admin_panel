@@ -9,6 +9,7 @@ import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confir
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 import { ActivatedRoute } from "@angular/router";
 import { RoleService } from "src/app/service/role.service";
+import { ErrorGenerator } from "src/app/app.helpers";
 
 @Component({
     selector: "app-detail-role",
@@ -61,7 +62,10 @@ export class DetailRole{
                 })
             }
             else this.listMenus = this.menuService.organizeMenu(data.menuList)
-        }).catch((error) => this.errorPopUpGenerator(error))
+        }).catch((error) => {
+            const exception = new ErrorGenerator(error, this.dialog)
+            exception.throwError()
+        })
     }
 
     private getDetailRole(): void {
@@ -76,7 +80,10 @@ export class DetailRole{
                 this.detailRole = data
                 this.setControlStates(data)
             })
-            .catch((error: HttpErrorResponse) => this.errorPopUpGenerator(error)) 
+            .catch((error: HttpErrorResponse) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            }) 
         })
     }
 
@@ -111,29 +118,14 @@ export class DetailRole{
                 }
             } 
         })
-            .catch((error) => this.errorPopUpGenerator(error))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => {
                 this.editMode = false
                 this.loading = false
             })
-    }
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 
     closeForm(): void {

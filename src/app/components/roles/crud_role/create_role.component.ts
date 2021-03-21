@@ -10,6 +10,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { MenuService } from "src/app/service/menu.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { ErrorGenerator } from "src/app/app.helpers";
 
 @Component({
     selector: "app-create-role",
@@ -45,7 +46,10 @@ export class CreateRole {
 
         this.roleService.doCreate(payload)
             .then(() => this.router.navigate(["/role"]))
-            .catch((error) => this.errorPopUpGenerator(error))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
     }
 
@@ -74,7 +78,10 @@ export class CreateRole {
             else this.listMenus = this.menuService.organizeMenu(data.menuList)
             this.setControlStates()
 
-        }).catch((error) => this.errorPopUpGenerator(error))
+        }).catch((error) => {
+            const exception = new ErrorGenerator(error, this.dialog)
+            exception.throwError()
+        })
     }
     
     resetListMenus(data: Array<Generics>): void {
@@ -90,23 +97,5 @@ export class CreateRole {
                 })
             }
         })
-    }
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core"
 import { PageEvent } from "@angular/material/paginator";
-import { Paginator } from "src/app/app.helpers";
+import { ErrorGenerator, Paginator } from "src/app/app.helpers";
 import { MenuService } from "src/app/service/menu.service";
 import { MatSort, Sort } from "@angular/material/sort"
 import { MatDialog } from "@angular/material/dialog";
@@ -70,7 +70,10 @@ export class Menulist extends Paginator {
                 this.getPaginationData(this.menuService, this.dialog)
             }
         })
-            .catch((error) => this.errorPopUpGenerator(error, this.dialog))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
     }
 }

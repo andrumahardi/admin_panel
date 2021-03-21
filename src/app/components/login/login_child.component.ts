@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { ErrorGenerator } from "src/app/app.helpers";
 import { PreLoginPayload } from "src/app/models/users";
 import { MenuService } from "src/app/service/menu.service";
 import { UserService } from "src/app/service/user.service";
@@ -44,25 +45,10 @@ export class LoginChildComponent {
                 this.menuService.setUserMenu(res.menu)
                 this.router.navigate(["/home"])
             })
-            .catch((err) => this.errorPopUpGenerator(err))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
-    }
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 }

@@ -49,7 +49,7 @@
         <td mat-cell *matCellDef="let element">
           <div class="table--actionbtns">
 
-            <a title="edit">
+            <a title="edit" [routerLink]="element.id" >
               <img src="../../../assets/img/edit_ico.svg" />
             </a>
             <a (click)="performDelete(element.id)" title="delete">

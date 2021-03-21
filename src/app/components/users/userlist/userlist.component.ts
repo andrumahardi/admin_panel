@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core"
 import { PageEvent } from "@angular/material/paginator"
-import { Paginator } from "src/app/app.helpers"
+import { ErrorGenerator, Paginator } from "src/app/app.helpers"
 import { MatDialog } from "@angular/material/dialog"
 
 import { UserService } from "src/app/service/user.service"
@@ -74,7 +74,10 @@ export class UserList extends Paginator{
             .then(() => {
                 this.getPaginationData(this.userService, this.dialog)
             })
-            .catch((err) => this.errorPopUpGenerator(err, this.dialog))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
             .finally(() => this.loading = false)
     }
 }

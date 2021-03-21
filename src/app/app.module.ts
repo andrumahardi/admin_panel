@@ -25,19 +25,24 @@ import { RouterGuard } from './router.guard';
 
 // Component modules
 import { AppComponent } from './app.component';
-import { LoginComponent } from "./screens/login/login.component"
-import { LoginChildComponent } from "src/app/components/login/login_child.component"
-import { HomeComponent } from "./screens/home/home.component"
 import { userReducer } from './reducers/user.reducers';
 import { dropdownItemsReducer } from "src/app/reducers/dropdown_items.reducers"
 import { ActivationUser } from "src/app/screens/activation_user/activation_user.component"
-import { ForgotPassword } from "src/app/components/forgot_password/forgot_password.component"
-import { ChangePassword } from "src/app/components/change_password/change_password.component"
 
 // Modal dialogs
 import { ConfirmDeleteDialog } from "src/app/components/modal_dialog/modal_confirm.component"
 import { ConfirmUpdateDialog } from "src/app/components/modal_dialog/modal_confirm.component"
 import { ErrorPopup } from "src/app/components/modal_dialog/modal_confirm.component"
+
+// Home modules
+import { HomeComponent } from "./screens/home/home.component"
+import { HomeChildComponent } from "src/app/components/home/home_child.component"
+
+// Auth modules
+import { LoginComponent } from "./screens/login/login.component"
+import { LoginChildComponent } from "src/app/components/login/login_child.component"
+import { ForgotPassword } from "src/app/components/forgot_password/forgot_password.component"
+import { ChangePassword } from "src/app/components/change_password/change_password.component"
 
 // Navigation bars
 import { UpperBar } from './components/upperbar/upperbar.component';
@@ -48,16 +53,13 @@ import { CollapsedSideBar } from "./components/sidebar/collapsed_sidebar.compone
 import { Menulist } from 'src/app/components/menus/menulist/menulist.component'
 import { CreateMenu } from "src/app/components/menus/crud_menu/create_menu.component"
 import { MenuForm } from "src/app/components/menus/crud_menu/menu_form.component"
+import { DetailMenu } from './components/menus/crud_menu/detail_menu.component';
 
 // User modules
 import { UserList } from "src/app/components/users/userlist/userlist.component"
 import { UserForm } from "src/app/components/users/crud_user/user_form.component"
 import { CreateUser } from "src/app/components/users/crud_user/create_user.component"
 import { DetailUser } from "src/app/components/users/crud_user/detail_user.component"
-
-// Home modules
-import { HomeChildComponent } from "src/app/components/home/home_child.component"
-
 
 // Role modules
 import { RoleList } from "src/app/components/roles/rolelist/rolelist.component"
@@ -78,6 +80,7 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
     CollapsedSideBar,
     Menulist,
     CreateMenu,
+    DetailMenu,
     MenuForm,
     UserList,
     UserForm,

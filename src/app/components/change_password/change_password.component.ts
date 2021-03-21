@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ErrorGenerator } from "src/app/app.helpers";
 import { Generics } from "src/app/models/generics";
 import { UserService } from "src/app/service/user.service";
 import { ActionSuccess, ErrorPopup } from "../modal_dialog/modal_confirm.component";
@@ -72,7 +73,10 @@ export class ChangePassword{
                     this.router.navigate(["/auth/login"])
                     this.resetFormControl()
                 })
-                .catch((error) => this.errorPopUpGenerator(error))
+                .catch((error) => {
+                    const exception = new ErrorGenerator(error, this.dialog)
+                    exception.throwError()
+                })
                 .finally(() => this.loading = false)
         }
         else {
@@ -84,25 +88,5 @@ export class ChangePassword{
         for (const key in this.formControl) {
             this.formControl[key].reset()
         }
-    }
-
-
-
-    errorPopUpGenerator({ error, status }: HttpErrorResponse): void {
-        let message: string = ""
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                message = "Server could not process data"
-                break
-            default:
-                message = error.detail
-        }
-        this.dialog.open(ErrorPopup, { data: { message }})
     }
 }

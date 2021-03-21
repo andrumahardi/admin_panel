@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { ArraysInObject, Generics, PaginatedListResult } from "../models/generics"
+import { Generics, PaginatedListResult } from "../models/generics"
 import { Menu } from "../models/menus"
 import { ConfigService } from "./config.service"
 import * as UserActions from "../actions/user.actions"
@@ -40,6 +40,16 @@ export class MenuService extends ConfigService {
         })
     }
 
+    getMenu(id: number): Promise<Generics> {
+        const url = `${this.baseEndpoint}${id}/`
+
+        return new Promise<Generics>((resolve, reject) => {
+            this.http.get(url, { headers: { authorization: `Token ${this.getAccessToken()}` }})
+                .subscribe((data: Generics): void => resolve(data), 
+                (error: HttpErrorResponse) => reject(error))
+        })
+    }
+
     doDestroy(id: number): Promise<boolean> {
         const url = `${this.baseEndpoint}${id}/`
 
@@ -50,6 +60,29 @@ export class MenuService extends ConfigService {
             })
                 .subscribe((): void => resolve(true),
                 (error: HttpErrorResponse): void => reject(error))
+        })
+    }
+
+    doUpdate(payload: FormData, id: number): Promise<Generics> {
+        const url = `${this.baseEndpoint}${id}/`
+        return new Promise((resolve, reject) => {
+            this.http.put( url, payload, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}`
+            }})
+                .subscribe((data): void => resolve(data),
+                (error: HttpErrorResponse): void => reject(error))
+        })
+    }
+
+    doCreate(payload: FormData): Promise<void> {
+        const url = this.baseEndpoint
+
+        return new Promise<void>((resolve, reject) => {
+            this.http.post(url, payload, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}`
+            }})
+                .subscribe(() => resolve(),
+                (error: HttpErrorResponse) => reject(error))
         })
     }
 

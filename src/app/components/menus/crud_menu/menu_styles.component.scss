@@ -47,6 +47,29 @@ input, input:disabled, ::ng-deep .mat-select-value-text, textarea {
     font-size: 10pt;
 }
 
+.inputfiles__label{
+    @include main.flexbox(row, space-evenly, center);
+    border: 1px solid white;
+    padding: 0.5rem;
+    background: main.$light-blue;
+    color: white;
+    border-radius: 0.2rem;
+    width: 7rem;
+    cursor: pointer;
+    box-shadow: 0.2rem 0.2rem 0.3rem #b7b7b7;
+
+    small{
+        width: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &:hover{
+        background: darken($color: main.$light-blue, $amount: 4%);
+    }
+}
+
 $buttons: ("primary" "cancel" "green");
 @each $btn in $buttons {
     .outline-#{$btn}-btn, .full-#{$btn}-btn {
@@ -56,7 +79,7 @@ $buttons: ("primary" "cancel" "green");
 }
 
 @media screen and (max-width: 768px) {
-    .formcontrols {
+    .formcomponent {
         @include main.gridview($coltemplate: auto);
     }
 }
