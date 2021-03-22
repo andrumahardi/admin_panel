@@ -35,4 +35,48 @@ export class TenantService extends ConfigService {
         })
     }
 
+    getTenant(id: number): Promise<Generics> {
+        const url = `${this.baseEndpoint}${id}/`
+
+        return new Promise<Generics>((resolve, reject) => {
+            this.http.get(url, { headers: { authorization: `Token ${this.getAccessToken()}` }})
+                .subscribe((data: Generics): void => resolve(data), 
+                (error: HttpErrorResponse) => reject(error))
+        })
+    }
+
+    doCreate(payload: Generics): Promise<Generics> {
+        const url = this.baseEndpoint
+
+        return new Promise<Generics>((resolve, reject) => {
+            this.http.post(url, payload, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}`
+            }})
+                .subscribe((data) => resolve(data),
+                (error: HttpErrorResponse) => reject(error))
+        })
+    }
+
+    doUpdate(payload: Generics, id: number): Promise<Generics> {
+        const url = `${this.baseEndpoint}${id}/`
+        return new Promise((resolve, reject) => {
+            this.http.patch( url, payload, { observe: "response", headers: {
+                authorization: `Token ${this.getAccessToken()}` } 
+            })
+                .subscribe(({ body }: Generics): void => resolve(body),
+                (error: HttpErrorResponse): void => reject(error))
+        })
+    }
+
+    doDestroy(id: number): Promise<void> {
+        const url = `${this.baseEndpoint}${id}/`
+        return new Promise((resolve, reject) => {
+            this.http.delete(url, { 
+                observe: "response", 
+                headers: { authorization: `Token ${this.getAccessToken()}` } 
+            })
+                .subscribe((): void => resolve(),
+                (error: HttpErrorResponse): void => reject(error))
+        })
+    }
 }

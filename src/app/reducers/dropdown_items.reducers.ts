@@ -6,7 +6,9 @@ import { ArraysInObject } from "../models/generics";
 const initialState: ArraysInObject = {
     tenantList: [],
     roleList: [],
-    menuList: []
+    menuList: [],
+    provinceList: [],
+    cityList: []
 }
 
 const stateReducer = createReducer(
@@ -27,6 +29,18 @@ const stateReducer = createReducer(
         return {
             ...state,
             menuList: payload
+        }
+    }),
+    on(DropdownListActions.setProvinceList, (state: ArraysInObject = initialState, { payload }: ArraysInObject): ArraysInObject => {
+        return {
+            ...state,
+            provinceList: payload
+        }
+    }),
+    on(DropdownListActions.setCityList, (state: ArraysInObject = initialState, { payload }: ArraysInObject): ArraysInObject => {
+        return {
+            ...state,
+            cityList: payload
         }
     })
 )

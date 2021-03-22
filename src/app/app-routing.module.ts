@@ -17,6 +17,9 @@ import { LoginChildComponent } from './components/login/login_child.component';
 import { ForgotPassword } from './components/forgot_password/forgot_password.component';
 import { ChangePassword } from './components/change_password/change_password.component';
 import { DetailMenu } from './components/menus/crud_menu/detail_menu.component';
+import { TenantList } from './components/tenants/tenantlist/tenantlist.component';
+import { CreateTenant } from './components/tenants/crud_tenant/create_tenant.component';
+import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.component';
 
 const routes: Routes = [
   { path: "activation/:id/:token", component: ActivationUser },
@@ -44,9 +47,13 @@ const routes: Routes = [
       { path: "role", component: RoleList, pathMatch: "full" },
       { path: "role/create", component: CreateRole },
       { path: "role/:id", component: DetailRole },
+      { path: "tenant", component: TenantList },
+      { path: "tenant/create", component: CreateTenant },
+      { path: "tenant/:id", component: DetailTenant },
       { path: "", redirectTo: "/home", pathMatch: "full" }
     ]
-  }
+  },
+  { path: "**", redirectTo: "/home" }
 ]
 
 

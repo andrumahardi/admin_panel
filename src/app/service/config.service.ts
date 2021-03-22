@@ -13,7 +13,9 @@ export class ConfigService {
         users: "users",
         menus: "menus",
         tenants: "tenants",
-        roles: "roles"
+        roles: "roles",
+        provinces: "provinces",
+        cities: "cities"
     }
 
     constructor(

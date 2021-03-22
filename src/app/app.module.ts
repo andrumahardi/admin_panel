@@ -67,6 +67,12 @@ import { RoleForm } from "src/app/components/roles/crud_role/role_form.component
 import { CreateRole } from "src/app/components/roles/crud_role/create_role.component"
 import { DetailRole } from './components/roles/crud_role/detail_role.component';
 
+// Tenant modules
+import { TenantList } from './components/tenants/tenantlist/tenantlist.component';
+import { TenantForm } from './components/tenants/crud_tenant/tenant_form.component';
+import { CreateTenant } from './components/tenants/crud_tenant/create_tenant.component';
+import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -90,6 +96,10 @@ import { DetailRole } from './components/roles/crud_role/detail_role.component';
     RoleForm,
     CreateRole,
     DetailRole,
+    TenantList,
+    TenantForm,
+    CreateTenant,
+    DetailTenant,
     ConfirmDeleteDialog,
     ConfirmUpdateDialog,
     ErrorPopup,

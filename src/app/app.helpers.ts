@@ -1,9 +1,11 @@
 import { HttpErrorResponse } from "@angular/common/http"
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms"
 import { MatDialog } from "@angular/material/dialog"
 import { ErrorPopup } from "./components/modal_dialog/modal_confirm.component"
 import { PaginatedListResult } from "./models/generics"
 import { MenuService } from "./service/menu.service"
 import { RoleService } from "./service/role.service"
+import { TenantService } from "./service/tenant.service"
 import { UserService } from "./service/user.service"
 
 export class Helpers{
@@ -69,7 +71,7 @@ export class Paginator{
     ) {}
 
     getPaginationData(
-        service: UserService | MenuService | RoleService,
+        service: UserService | MenuService | RoleService | TenantService,
         dialog: MatDialog
     ): void {
         this.loading = true
@@ -78,7 +80,6 @@ export class Paginator{
             .then((data: PaginatedListResult) => {
                 this.dataSource = data.results
                 this.totalPages = data.total_pages
-
                 this.dateParser()
             })
             .catch((error) => {
@@ -132,5 +133,19 @@ export class ErrorGenerator{
                 this.message = error.detail
         }
         this.dialog.open(ErrorPopup, { data: { message: this.message }})
+    }
+}
+
+export class CustomValidator extends Validators{
+    static mobilepattern(): ValidatorFn {
+        return CustomValidator.generateMobilePatternError
+    }
+
+    static generateMobilePatternError(control: AbstractControl): ValidationErrors | null {
+        const pattern = /[^0-9]/ig
+        const mobilephoneValid: boolean = (control.value.search(pattern) === -1)
+
+        if (mobilephoneValid) return null
+        return {mobilepattern: true}
     }
 }

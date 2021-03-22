@@ -1,0 +1,182 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="formcomponent">
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Tenant Name</mat-label>
+                <input
+                    type="text"
+                    name="tenant_name"
+                    [formControl]="formControl.tenant_name"
+                    matInput>
+                <mat-error *ngIf="formControl.tenant_name.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+                <mat-error *ngIf="formControl.tenant_name.hasError('minlength')">
+                    {{errorMessages.minlength}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Address (Primary)</mat-label>
+                <input
+                    type="text"
+                    name="address"
+                    [formControl]="formControl.address"
+                    matInput>
+            </mat-form-field>
+        </div>
+    
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Address (Secondary)</mat-label>
+                <input
+                    type="text"
+                    name="second_address"
+                    [formControl]="formControl.second_address"
+                    matInput>
+            </mat-form-field>
+        </div>
+    
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Phone (Primary) </mat-label>
+                <input
+                    type="tel"
+                    name="phone_1st"
+                    [formControl]="formControl.phone_1st"
+                    matInput>
+                <mat-error *ngIf="formControl.phone_1st.hasError('required')">
+                    {{errorMessages.required}}
+                </mat-error>
+                <mat-error *ngIf="formControl.phone_1st.hasError('minlength') && !formControl.phone_1st.hasError('mobilepattern')">
+                    {{errorMessages.minPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.phone_1st.hasError('maxlength') && !formControl.phone_1st.hasError('mobilepattern')">
+                    {{errorMessages.maxPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.phone_1st.hasError('mobilepattern')">
+                    {{errorMessages.mobilePatternInvalid}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Phone (Secondary) </mat-label>
+                <input
+                    type="tel"
+                    name="phone_2nd"
+                    [formControl]="formControl.phone_2nd"
+                    matInput>
+                <mat-error *ngIf="formControl.phone_2nd.hasError('minlength') && !formControl.phone_2nd.hasError('mobilepattern')">
+                    {{errorMessages.minPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.phone_2nd.hasError('maxlength') && !formControl.phone_2nd.hasError('mobilepattern')">
+                    {{errorMessages.maxPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.phone_2nd.hasError('mobilepattern')">
+                    {{errorMessages.mobilePatternInvalid}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Fax Number </mat-label>
+                <input
+                    type="tel"
+                    name="fax"
+                    [formControl]="formControl.fax"
+                    matInput>
+                <mat-error *ngIf="formControl.fax.hasError('minlength') && !formControl.fax.hasError('mobilepattern')">
+                    {{errorMessages.minPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.fax.hasError('maxlength') && !formControl.fax.hasError('mobilepattern')">
+                    {{errorMessages.maxPhoneNum}}
+                </mat-error>
+                <mat-error *ngIf="formControl.fax.hasError('mobilepattern')">
+                    {{errorMessages.mobilePatternInvalid}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Website </mat-label>
+                <input
+                    type="url"
+                    name="website"
+                    [formControl]="formControl.website"
+                    matInput>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Province </mat-label>
+                <mat-select 
+                    name="province_id"
+                    [formControl]="formControl.province_id">
+                    <mat-option value=""> - </mat-option>
+                    <mat-option 
+                        *ngFor="let province of listProvinces" 
+                        [value]="province.id.toString()">{{ province.province_name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> City </mat-label>
+                <mat-select 
+                    name="city_id"
+                    [formControl]="formControl.city_id">
+                    <mat-option value=""> - </mat-option>
+                    <mat-option 
+                        *ngFor="let city of listCities" 
+                        [value]="city.id.toString()">{{ city.city_name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Status </mat-label>
+                <mat-select 
+                    name="is_active"
+                    [formControl]="formControl.is_active">
+                    <mat-option value="active"> Active </mat-option>
+                    <mat-option value="inactive"> Inactive </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label> Remark </mat-label>
+                <textarea
+                    type="text"
+                    name="remark"
+                    [formControl]="formControl.remark"
+                    matInput></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div *ngIf="!disableState" class="btn-group">
+        <button 
+            type="submit" 
+            class="full-primary-btn">
+            Save
+        </button>
+        <button 
+            type="button" 
+            (click)="onCancel()"
+            style="margin-left: 0.5rem;"
+            class="outline-cancel-btn">
+            Cancel
+        </button>
+    </div>
+</form>

@@ -1,21 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { 
-    AbstractControl, 
-    FormControl, 
-    ValidationErrors, 
-    ValidatorFn, 
-    Validators 
-} from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { ArraysInObject, Generics } from "src/app/models/generics";
 import { RoleService } from "src/app/service/role.service";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions"
 import { TenantService } from "src/app/service/tenant.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 import { MatDialog } from "@angular/material/dialog";
-import { ErrorGenerator } from "src/app/app.helpers";
+import { CustomValidator, ErrorGenerator } from "src/app/app.helpers";
 
 
 @Component({
@@ -161,19 +153,5 @@ export class UserForm implements OnChanges{
                 this.formControl[key].setValue(data[key])
             }
         }
-    }
-}
-
-class CustomValidator extends Validators{
-    static mobilepattern(): ValidatorFn {
-        return CustomValidator.generateMobilePatternError
-    }
-
-    static generateMobilePatternError(control: AbstractControl): ValidationErrors | null {
-        const pattern = /[^0-9]/ig
-        const mobilephoneValid: boolean = (control.value.search(pattern) === -1)
-
-        if (mobilephoneValid) return null
-        return {mobilepattern: true}
     }
 }
