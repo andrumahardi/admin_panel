@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from "@angular/common/http";
 import { 
     Component, 
     ElementRef, 
@@ -15,7 +14,6 @@ import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { ArraysInObject, Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
-import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 import { ErrorGenerator } from "src/app/app.helpers";
 

@@ -8,7 +8,7 @@ import { Generics } from "../models/generics"
     providedIn: "root"
 })
 export class ConfigService {
-    private readonly baseUrl: string | undefined = process.env.LOCAL_SERVER_BASE_URL
+    private readonly baseUrl: string | undefined = process.env.SERVER_BASE_URL
     private readonly endpoints: Generics = {
         users: "users",
         menus: "menus",

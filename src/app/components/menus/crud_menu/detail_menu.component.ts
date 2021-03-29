@@ -33,10 +33,10 @@ export class DetailMenu{
         private menuService: MenuService,
         private route: ActivatedRoute
     ) {
-        this.getDetailUser()
+        this.getDetailMenu()
     }
 
-    private getDetailUser(): void {
+    private getDetailMenu(): void {
         const promise = new Promise<number>((resolve) => {
             this.route.paramMap
                 .subscribe(({ params }: Generics) => resolve(params.id))

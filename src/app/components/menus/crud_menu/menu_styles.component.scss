@@ -51,6 +51,7 @@ input, input:disabled, ::ng-deep .mat-select-value-text, textarea {
     @include main.flexbox(row, space-evenly, center);
     border: 1px solid white;
     padding: 0.5rem;
+    margin-bottom: 1rem;
     background: main.$light-blue;
     color: white;
     border-radius: 0.2rem;
