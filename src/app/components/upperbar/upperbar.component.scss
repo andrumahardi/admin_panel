@@ -68,9 +68,10 @@ p, a, button{
 }
 
 .profilepic{
-    @include main.cover_image;
+    @include main.cover_image($size: cover);
     height: 5rem;
     width: 5rem;
+    border-radius: 50%;
 }
 
 .profilebtns{

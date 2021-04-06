@@ -28,13 +28,13 @@ export class UserForm implements OnChanges{
     listRoles: Array<Generics> = []
 
     readonly errorMessages = {
-        required: "This field is required!",
+        required: "This field is required",
         email: "Please enter valid email",
-        maxlength: "Characters should not exceed 20 letters",
-        maxPhoneNum: "Phone number should not exceed 12 numbers",
-        mobilePatternInvalid: "Valid phone is for example 628765400543232",
-        minlength: "Characters too short ( < 5 letters )",
-        minPhoneNum: "Phone number is too short ( < 10 numbers )"
+        maxlength: "Characters too long",
+        maxPhoneNum: "Phone numbers too long",
+        mobilePatternInvalid: "Example 628765400543232",
+        minlength: "Characters too short",
+        minPhoneNum: "Phone numbers too short"
     }
 
     constructor(

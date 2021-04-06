@@ -1,7 +1,6 @@
 import { Action, createReducer, on } from "@ngrx/store";
 import { UserReducerPayload, UserStates } from "../models/users";
 import * as UserActions from "../actions/user.actions"
-import { state } from "@angular/animations";
 
 
 const initialState: UserStates = {

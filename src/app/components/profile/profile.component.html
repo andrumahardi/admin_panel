@@ -1,0 +1,172 @@
+<section class="router-container spinner--parent">
+    <div *ngIf="loading" class="spinner--container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div id="form-section">
+        <header>
+            <h3>User Profile</h3>
+            <div *ngIf="!editMode" class="btn-group">
+                <button
+                    type="button"
+                    (click)="toggleEditMode()"
+                    class="outline-primary-btn">
+                    Update
+                </button>
+            </div>
+        </header>
+        <form (ngSubmit)="onSubmit()">
+            <div class="main-form">
+                <div class="main-form--image">
+                    <figure [style.background-image]="backgroundImage">
+                        <div *ngIf="editMode">
+                            <label for="upload-profile"></label>
+                            <input
+                                (change)="processingImage($event)"
+                                type="file"
+                                id="upload-profile"
+                                accept=".jpg, .png, .jpeg">
+                        </div>
+                    </figure>
+                </div>
+                <div class="main-form--input">
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>First name</mat-label>
+                            <input
+                                type="text"
+                                name="firstname"
+                                [formControl]="formControl.first_name"
+                                matInput>
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Last name</mat-label>
+                            <input
+                                type="text"
+                                name="lastname"
+                                [formControl]="formControl.last_name"
+                                matInput>
+                        </mat-form-field>
+                    </div>
+                
+                   <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Username</mat-label>
+                            <input 
+                                type="username"
+                                matInput
+                                [formControl]="formControl.username">
+                            <mat-error *ngIf="formControl.username.hasError('required')">
+                                {{errorMessages.required}}
+                            </mat-error>
+                            <mat-error *ngIf="formControl.username.hasError('maxlength')">
+                                {{errorMessages.maxlength}}
+                            </mat-error>
+                            <mat-error *ngIf="formControl.username.hasError('minlength')">
+                                {{errorMessages.minlength}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Mobile</mat-label>
+                            <input 
+                                type="tel"
+                                matInput
+                                name="mobile"
+                                [formControl]="formControl.mobile">
+                            <mat-error *ngIf="formControl.mobile.hasError('required')">
+                                {{errorMessages.required}}
+                            </mat-error>
+                            <mat-error *ngIf="formControl.mobile.hasError('maxlength')">
+                                {{errorMessages.maxPhoneNum}}
+                            </mat-error>
+                            <mat-error *ngIf="formControl.mobile.hasError('mobilepattern') && !formControl.mobile.hasError('maxlength') && !formControl.mobile.hasError('required')">
+                                {{errorMessages.mobilePatternInvalid}}
+                            </mat-error>
+                            <mat-error *ngIf="formControl.mobile.hasError('minlength') && !formControl.mobile.hasError('mobilepattern')">
+                                {{errorMessages.minPhoneNum}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+    
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input 
+                                type="email"
+                                matInput
+                                [formControl]="formControl.email">
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Tenant</mat-label>
+                            <input 
+                                type="text"
+                                matInput
+                                readonly
+                                name="tenant"
+                                [formControl]="formControl.tenant">
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label> Status </mat-label>
+                            <input 
+                                type="text"
+                                matInput
+                                name="is_confirmed"
+                                readonly
+                                [formControl]="formControl.is_confirmed">
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Date Joined</mat-label>
+                            <input 
+                                type="text"
+                                matInput
+                                readonly
+                                name="date_joined"
+                                [formControl]="formControl.date_joined">
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="input">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Role</mat-label>
+                            <input 
+                                type="text"
+                                matInput
+                                readonly
+                                name="role"
+                                [formControl]="formControl.role">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editMode" class="btn-group">
+                <button 
+                    type="submit" 
+                    class="full-primary-btn">
+                    Save
+                </button>
+                <button 
+                    type="button" 
+                    (click)="toggleEditMode()"
+                    style="margin-left: 0.5rem;"
+                    class="outline-cancel-btn">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

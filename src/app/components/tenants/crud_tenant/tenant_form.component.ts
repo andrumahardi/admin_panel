@@ -6,8 +6,6 @@ import {
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { ArraysInObject, Generics } from "src/app/models/generics";
-import { RoleService } from "src/app/service/role.service";
-import { TenantService } from "src/app/service/tenant.service";
 import { MatDialog } from "@angular/material/dialog";
 import { CustomValidator, ErrorGenerator } from "src/app/app.helpers";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions"

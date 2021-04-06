@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { ErrorGenerator } from "src/app/app.helpers";
 import { Generics } from "src/app/models/generics";
 
 import { UserService } from "src/app/service/user.service";
@@ -36,34 +37,18 @@ export class CreateUser{
             last_name: eventPayload.last_name.value,
             email: eventPayload.email.value,
             mobile: eventPayload.mobile.value,
-            role_id: eventPayload.role.value,
             tenant_id: eventPayload.tenant.value,
             password: eventPayload.password.value
         }
-        this.performCreate(payload)
-    }
 
-    async performCreate(payload: Generics): Promise<void> {
-        try {
-            this.loading = true
-
-            await this.userService.doRegister(payload)
-            this.router.navigate(["user"])
-        }
-        catch({ error, status }) {
-            let message = ""
-            if (status === 400) {
-                for (const key in error.detail) {
-                    message = error.detail[key][0]
-                    break
-                }
-            }
-            else message = "Server could not process data"
-            this.dialog.open(ErrorPopup, { data: { message }})
-        }
-        finally {
-            this.loading = false
-        }
+        this.loading = true
+        this.userService.doRegister(payload)
+            .then(() => this.router.navigate(["user"]))
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
+            .finally(() => this.loading = false)
     }
 
     setControlStates(): void {

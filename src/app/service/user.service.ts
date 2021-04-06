@@ -70,6 +70,19 @@ export class UserService extends ConfigService {
     doUpdate(payload: Generics, id: number): Promise<Generics> {
         const url = `${this.baseEndpoint}${id}/`
         return new Promise((resolve, reject) => {
+            this.http.put( url, payload, { 
+                    observe: "response", 
+                    headers: { authorization: `Token ${this.getAccessToken()}` } 
+                })
+                .subscribe(
+                    ({ body }: Generics): void => resolve(body),
+                    (error: HttpErrorResponse): void => reject(error))
+        })
+    }
+
+    doUpdateProfile(payload: FormData, id: Number): Promise<Generics> {
+        const url = `${this.baseEndpoint}${id}/profile`
+        return new Promise((resolve, reject) => {
             this.http.patch( url, payload, { 
                     observe: "response", 
                     headers: { authorization: `Token ${this.getAccessToken()}` } 
@@ -159,7 +172,8 @@ export class UserService extends ConfigService {
             last_name: payload.last_name,
             email: payload.email,
             mobile: payload.mobile,
-            is_active: payload.is_active
+            is_active: payload.is_active,
+            profile_image: payload.profile_image
         }
         this.store.dispatch(UserActions.setUser({payload: user}))
     }

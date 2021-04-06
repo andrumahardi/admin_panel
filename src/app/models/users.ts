@@ -8,7 +8,8 @@ export interface User {
     email: string,
     first_name: string,
     last_name: string,
-    mobile: string
+    mobile: string,
+    profile_image?: string
 }
 
 export interface PreLoginPayload {

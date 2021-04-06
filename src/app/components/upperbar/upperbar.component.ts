@@ -1,13 +1,11 @@
-import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, DoCheck } from "@angular/core"
+import { Component, Output, EventEmitter, Input } from "@angular/core"
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { UserService } from "src/app/service/user.service";
 import { User, UserStates } from "src/app/models/users";
-import { HttpErrorResponse } from "@angular/common/http";
 import { MatDialog } from "@angular/material/dialog";
 import * as UserActions from "src/app/actions/user.actions"
-import { ErrorPopup } from "../modal_dialog/modal_confirm.component";
 import { Generics } from "src/app/models/generics";
 import { ErrorGenerator } from "src/app/app.helpers";
 
@@ -19,7 +17,7 @@ import { ErrorGenerator } from "src/app/app.helpers";
 
 export class UpperBar{
     user: User | {[key: string]: any} = {}
-    pictureUrl: string = ""
+    profileImage: string = "url(assets/img/user_nopp.svg)"
     showdropdown: boolean = false
 
     @Input() expandSidebar: boolean = false
@@ -51,12 +49,15 @@ export class UpperBar{
                     email: data.email,
                     first_name: data.first_name,
                     last_name: data.last_name,
-                    mobile: data.mobile
+                    mobile: data.mobile,
+                    profile_image: data.profile_image
                 }
                 this.user = user
                 this.store.dispatch(UserActions.setUser({ payload: user }))
             }
             else this.user = states.currentUser
+            
+            this.profileImage = `url(${this.user.profile_image})`
         })
         .catch((error) => {
             const exception = new ErrorGenerator(error, this.dialog)
@@ -75,5 +76,11 @@ export class UpperBar{
 
     toggleSidebar() {
         this.sidebarEvent.emit(!this.expandSidebar)
+    }
+
+    userProfile() {
+        this.showdropdown = false
+        const userID: string | null = localStorage.getItem("user_id")
+        this.router.navigate([`profile/${userID}`])
     }
 }

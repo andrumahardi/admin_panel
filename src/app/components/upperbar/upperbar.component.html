@@ -11,7 +11,7 @@
         id="upperbar--profilebtn">
         <figure 
             class="profilepic"
-            style="background-image: url(../../assets/img/user_nopp.svg);">
+            [style.background-image]="profileImage">
         </figure>
         <p>{{ user.email }}</p>
     </section>
@@ -20,13 +20,19 @@
         id="upperbar--dropdown">
         <figure
             class="profilepic"
-            style="background-image: url(../../assets/img/user_nopp.svg);">
+            [style.background-image]="profileImage">
         </figure>
         <article>
             <p><strong>{{user.username}}</strong></p>
             <p><small>{{user.email}}</small></p>
         </article>
         <div class="profilebtns">
+            <button
+                type="button"
+                (click)="userProfile()"
+                class="inline-btns">
+                User Profile
+            </button>
             <button
                 type="button"
                 (click)="changePassword()"

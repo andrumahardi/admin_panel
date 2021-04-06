@@ -24,10 +24,10 @@ $sidebar-collapsed-width: 3rem;
     align-items: $align;
 }
 
-@mixin cover_image{
+@mixin cover_image($size: contain){
     background-position: center !important;
     background-repeat: no-repeat !important;
-    background-size: contain !important;
+    background-size: $size !important;
 }
 
 @mixin defaultbtn_style($col: $light-blue, $bg: none) {

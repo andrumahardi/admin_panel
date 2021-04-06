@@ -114,9 +114,8 @@ export class DetailUser{
                     }
                 })
                 .catch((error) => {
-    
-            const exception = new ErrorGenerator(error, this.dialog)
-            exception.throwError()
+                    const exception = new ErrorGenerator(error, this.dialog)
+                    exception.throwError()
                 })
                 .finally(() => this.loading = false)
         }

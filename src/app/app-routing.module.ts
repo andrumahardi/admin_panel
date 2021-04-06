@@ -20,6 +20,7 @@ import { DetailMenu } from './components/menus/crud_menu/detail_menu.component';
 import { TenantList } from './components/tenants/tenantlist/tenantlist.component';
 import { CreateTenant } from './components/tenants/crud_tenant/create_tenant.component';
 import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.component';
+import { Profile } from './components/profile/profile.component';
 
 const routes: Routes = [
   { path: "activation/:id/:token", component: ActivationUser },
@@ -44,6 +45,7 @@ const routes: Routes = [
       { path: "user", component: UserList, pathMatch: "full" },
       { path: "user/create", component: CreateUser },
       { path: "user/:id", component: DetailUser },
+      { path: "profile/:id", component: Profile },
       { path: "role", component: RoleList, pathMatch: "full" },
       { path: "role/create", component: CreateRole },
       { path: "role/:id", component: DetailRole },

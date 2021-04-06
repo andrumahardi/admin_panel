@@ -60,6 +60,7 @@ import { UserList } from "src/app/components/users/userlist/userlist.component"
 import { UserForm } from "src/app/components/users/crud_user/user_form.component"
 import { CreateUser } from "src/app/components/users/crud_user/create_user.component"
 import { DetailUser } from "src/app/components/users/crud_user/detail_user.component"
+import { Profile } from './components/profile/profile.component';
 
 // Role modules
 import { RoleList } from "src/app/components/roles/rolelist/rolelist.component"
@@ -92,6 +93,7 @@ import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.com
     UserForm,
     DetailUser,
     CreateUser,
+    Profile,
     RoleList,
     RoleForm,
     CreateRole,

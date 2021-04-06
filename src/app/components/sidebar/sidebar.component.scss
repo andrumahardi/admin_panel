@@ -15,7 +15,7 @@
     }
     
     &--img{
-        @include main.cover_image;
+        @include main.cover_image();
         width: 75%;
         height: 7rem;
     }

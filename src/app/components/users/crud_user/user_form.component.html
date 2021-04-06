@@ -77,7 +77,7 @@
                 <mat-error *ngIf="formControl.mobile.hasError('maxlength')">
                     {{errorMessages.maxPhoneNum}}
                 </mat-error>
-                <mat-error *ngIf="formControl.mobile.hasError('mobilepattern') && !formControl.mobile.hasError('maxlength')">
+                <mat-error *ngIf="formControl.mobile.hasError('mobilepattern') && !formControl.mobile.hasError('maxlength') && !formControl.mobile.hasError('required')">
                     {{errorMessages.mobilePatternInvalid}}
                 </mat-error>
                 <mat-error *ngIf="formControl.mobile.hasError('minlength') && !formControl.mobile.hasError('mobilepattern')">

@@ -117,21 +117,9 @@ export class ErrorGenerator{
     ){}
 
     throwError() {
-        const { error, status }: HttpErrorResponse = this.exception
+        const { error }: HttpErrorResponse = this.exception
 
-        switch (status) {
-            case 400:
-                for (const key in error.detail) {
-                    this.message = error.detail[key][0]
-                    break
-                }
-                break
-            case 500:
-                this.message = "Server could not process data"
-                break
-            default:
-                this.message = error.detail
-        }
+        this.message = error.detail
         this.dialog.open(ErrorPopup, { data: { message: this.message }})
     }
 }
@@ -143,9 +131,12 @@ export class CustomValidator extends Validators{
 
     static generateMobilePatternError(control: AbstractControl): ValidationErrors | null {
         const pattern = /[^0-9]/ig
-        const mobilephoneValid: boolean = (control.value.search(pattern) === -1)
 
-        if (mobilephoneValid) return null
+        if (control.value) {
+            const mobilephoneValid: boolean = (control.value.search(pattern) === -1)
+    
+            if (mobilephoneValid) return null
+        }
         return {mobilepattern: true}
     }
 }
