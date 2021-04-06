@@ -80,6 +80,7 @@ export class DetailMenu{
         
                 const data = await this.menuService.doUpdate(payload, this.detailMenu.id)
                 this.detailMenu = data.body
+                this.closeForm()
             }
         })
             .catch((error) => {
@@ -87,7 +88,6 @@ export class DetailMenu{
                 exception.throwError()
             })
             .finally(() => {
-                this.closeForm()
                 this.loading = false
             })
     }
@@ -98,7 +98,8 @@ export class DetailMenu{
             menu_path_url: data.menu_path_url,
             menu_seq: +data.menu_seq,
             parent: data.parent ? String(data.parent) : "",
-            description: data.description
+            description: data.description,
+            menu_icon_url: data.menu_icon_url
         }
     }
 }

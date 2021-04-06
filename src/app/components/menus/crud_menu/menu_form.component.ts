@@ -16,6 +16,7 @@ import { ArraysInObject, Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
 import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
 import { ErrorGenerator } from "src/app/app.helpers";
+import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
 
 @Component({
     selector: "app-menu-form",
@@ -33,12 +34,11 @@ export class MenuForm implements OnChanges{
 
     @ViewChild("inputIcon") inputIcon: ElementRef | null = null
 
+    menuIcon: string = "unset"
     iconFileLabel: string = "Select icon"
     iconImage: File | null = null
+
     menuList: Array<Generics> = []
-    acceptedFileTypes: string = [
-        ".svg", ".jpg", ".jpeg", ".png"
-    ].join(",")
 
     readonly errorMessages = {
         required: "This field is required!",
@@ -83,12 +83,30 @@ export class MenuForm implements OnChanges{
     }
 
     readImage(event: Event): void {
+        const acceptedFileTypes: Array<string> = [
+            "image/ico", "image/png", "image/svg+xml"
+        ]
+
         const inputFile: HTMLInputElement = (event.target as HTMLInputElement)
         this.resetInputFilesValue()
         
         if (inputFile.files?.length) {
+            if (inputFile.files[0].size > 1e5) {
+                this.dialog.open(ErrorPopup, { data: {
+                    message: "Icon should not exceed 100kb"
+                }})
+                return
+            }
+            if (!acceptedFileTypes.includes(inputFile.files[0].type)) {
+                this.dialog.open(ErrorPopup, { data: {
+                    message: `Accepted image formats are ${acceptedFileTypes.join(", ")}`
+                }})
+                return
+            }
+
             this.iconFileLabel = inputFile.files[0].name
             this.iconImage = inputFile.files[0]
+            this.menuIcon = `url(${URL.createObjectURL(inputFile.files[0])})`
         }
     }
 
@@ -133,9 +151,18 @@ export class MenuForm implements OnChanges{
     resetInputFilesValue(): void {
         this.iconImage = null
         this.iconFileLabel = "Select icon"
+
+        if (this.data.menu_icon_url) {
+            this.menuIcon = `url(${this.data.menu_icon_url})`
+        }
+        else this.menuIcon = ""
     }
 
     setControlStates(data: Generics): void {
+        if (data.menu_icon_url) {
+            this.menuIcon = `url(${data.menu_icon_url})`
+        }
+
         for (const key in this.formControl) {
             this.formControl[key].reset({ value: data[key], disabled: this.disableState })
         }

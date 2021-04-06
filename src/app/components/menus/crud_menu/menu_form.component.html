@@ -65,8 +65,11 @@
         </div>
 
         <div>
-            <div>
-                <div *ngIf="!disableState" appearance="outline">
+            <div class="inputfiles" *ngIf="!disableState">
+                <figure class="inputfiles__image">
+                    <img [style.background-image]="menuIcon">
+                </figure>
+                <div>
                     <label 
                         class="inputfiles__label"
                         for="icon_image">
@@ -78,10 +81,10 @@
                         id="icon_image"
                         style="display: none;"
                         type="file"
-                        [accept]="acceptedFileTypes"
+                        accept="image/*"
                         (change)="readImage($event)"
                         name="icon_image"/>
-                  </div>
+                </div>
             </div>
 
             <div>

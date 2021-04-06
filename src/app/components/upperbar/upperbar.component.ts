@@ -57,7 +57,9 @@ export class UpperBar{
             }
             else this.user = states.currentUser
             
-            this.profileImage = `url(${this.user.profile_image})`
+            if (this.user.profile_image) {
+                this.profileImage = `url(${this.user.profile_image})`
+            }
         })
         .catch((error) => {
             const exception = new ErrorGenerator(error, this.dialog)

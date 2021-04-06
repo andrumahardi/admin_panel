@@ -25,3 +25,25 @@ header{
 }
 
 @include main.tableComponent;
+
+.table{
+    &--actionbtns{
+        &--edit, &--delete{
+            height: 1rem;
+            width: 1rem;
+            @include main.cover_image($size: cover);
+            background-image: url(../assets/img/edit_outline.svg);
+            
+            &:hover{
+                background-image: url(../assets/img/edit_full.svg);
+            }
+        }
+        &--delete{
+            background-image: url(../assets/img/trash_outline.svg);
+
+            &:hover{
+                background-image: url(../assets/img/trash_full.svg);
+            }
+        }
+    }
+}

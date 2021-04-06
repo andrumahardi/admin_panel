@@ -47,27 +47,46 @@ input, input:disabled, ::ng-deep .mat-select-value-text, textarea {
     font-size: 10pt;
 }
 
-.inputfiles__label{
-    @include main.flexbox(row, space-evenly, center);
-    border: 1px solid white;
-    padding: 0.5rem;
+.inputfiles {
+    @include main.flexbox(row, unset, center);
     margin-bottom: 1rem;
-    background: main.$light-blue;
-    color: white;
-    border-radius: 0.2rem;
-    width: 7rem;
-    cursor: pointer;
-    box-shadow: 0.2rem 0.2rem 0.3rem #b7b7b7;
 
-    small{
-        width: 50%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    &__image{
+        @include main.cover_image($size: cover);
+        background: url(../../../../assets/img/checkerboard.svg);
+        height: 5rem;
+        width: 5rem;
+
+        img {
+            @include main.cover_image($size: contain);
+            height: inherit;
+            width: inherit;
+        }
     }
 
-    &:hover{
-        background: darken($color: main.$light-blue, $amount: 4%);
+    &__label{
+        @include main.flexbox(row, space-between, center);
+        border: 1px solid white;
+        padding: 0.5rem;
+        margin-left: 1rem;
+        background: main.$light-blue;
+        color: white;
+        border-radius: 0.2rem;
+        width: 10rem;
+        cursor: pointer;
+        box-shadow: 0.2rem 0.2rem 0.3rem #b7b7b7;
+    
+        small{
+            width: 75%;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    
+        &:hover{
+            background: darken($color: main.$light-blue, $amount: 4%);
+        }
     }
 }
 

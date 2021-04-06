@@ -72,15 +72,9 @@ export class DetailUser{
             tenant_id: eventPayload.tenant.value
         }
         this.userService.doUpdate(payload, this.detailUser["id"])
-            .then(() => {
-                // after send request succeed update forms value
-                // and current login credential if edited user equals current user
-                let newFormControlValues: Generics = {}
-                for (const key in eventPayload) {
-                    newFormControlValues[key] = eventPayload[key].value
-                }
-
-                this.setControlStates(newFormControlValues)
+            .then((data) => {
+                this.detailUser = data
+                this.setControlStates(this.detailUser)
                 this.closeForm()  
             })
             .catch((error) => {

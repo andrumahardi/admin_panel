@@ -45,11 +45,14 @@ export class CreateMenu{
         payload.append("menu_path_url", eventPayload.data.menu_path_url.value)
         payload.append("parent_id", eventPayload.data.parent.value)
         payload.append("description", eventPayload.data.description.value)
-        payload.append("icon_file", eventPayload.file)
+        payload.append("icon_image", eventPayload.file)
+
+        console.log(eventPayload.file)
 
         this.loading = true
         this.menuService.doCreate(payload)
             .then(() => {
+                this.closeForm()
                 this.router.navigate(["/menu"])
             })
             .catch((error) => {
@@ -57,7 +60,6 @@ export class CreateMenu{
                 exception.throwError()
             })
             .finally(() => {
-                this.closeForm()
                 this.loading = false
             })
     }
@@ -68,7 +70,8 @@ export class CreateMenu{
             menu_path_url: "",
             menu_seq: "",
             parent: "",
-            description: ""
+            description: "",
+            menu_icon_url: ""
         }
     }
 }

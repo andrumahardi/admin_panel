@@ -58,16 +58,16 @@
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let element">
           <div class="table--actionbtns">
-
-            <a 
+            <a
+              class="table--actionbtns--edit"
               [routerLink]="element.id"
               title="edit">
-              <img src="../../../assets/img/edit_ico.svg" />
             </a>
-            <a (click)="confirmOnDelete(element.id)" title="delete">
-              <img src="../../../assets/img/trash_ico.svg" />
+            <a
+              class="table--actionbtns--delete"
+              (click)="confirmOnDelete(element.id)"
+              title="delete">
             </a>
-
           </div>
         </td>
       </ng-container>
