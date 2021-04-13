@@ -74,6 +74,11 @@ import { TenantForm } from './components/tenants/crud_tenant/tenant_form.compone
 import { CreateTenant } from './components/tenants/crud_tenant/create_tenant.component';
 import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.component';
 
+// Banner modules
+import { BannerList } from "src/app/components/banners/bannerlist/bannerlist.component"
+import { BannerForm } from './components/banners/crud_banner/banner_form.component';
+import { CreateBanner } from './components/banners/crud_banner/create_banner.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -102,6 +107,9 @@ import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.com
     TenantForm,
     CreateTenant,
     DetailTenant,
+    BannerList,
+    CreateBanner,
+    BannerForm,
     ConfirmDeleteDialog,
     ConfirmUpdateDialog,
     ErrorPopup,

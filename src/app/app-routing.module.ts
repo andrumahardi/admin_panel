@@ -21,6 +21,8 @@ import { TenantList } from './components/tenants/tenantlist/tenantlist.component
 import { CreateTenant } from './components/tenants/crud_tenant/create_tenant.component';
 import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.component';
 import { Profile } from './components/profile/profile.component';
+import { BannerList } from './components/banners/bannerlist/bannerlist.component';
+import { CreateBanner } from './components/banners/crud_banner/create_banner.component';
 
 const routes: Routes = [
   { path: "activation/:id/:token", component: ActivationUser },
@@ -52,6 +54,8 @@ const routes: Routes = [
       { path: "tenant", component: TenantList },
       { path: "tenant/create", component: CreateTenant },
       { path: "tenant/:id", component: DetailTenant },
+      { path: "banner", component: BannerList },
+      { path: "banner/create", component: CreateBanner },
       { path: "", redirectTo: "/home", pathMatch: "full" }
     ]
   },

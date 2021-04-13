@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
@@ -16,7 +16,7 @@ import { CustomValidator, ErrorGenerator } from "src/app/app.helpers";
     styleUrls: [ "./user_styles.component.scss" ]
 })
 
-export class UserForm implements OnChanges{
+export class UserForm implements OnChanges, OnInit{
     @Input() data: Generics = {}
     @Input() disableState: boolean = false
     @Input() forEdit: boolean = false
@@ -42,9 +42,7 @@ export class UserForm implements OnChanges{
         private roleService: RoleService,
         private tenantService: TenantService,
         private dialog: MatDialog
-    ) {
-        this.fetchRequiredData()
-    }
+    ) {}
 
     ngOnChanges(event: SimpleChanges) {
         if (event.disableState) {
@@ -58,7 +56,7 @@ export class UserForm implements OnChanges{
         }
     }
 
-    private fetchRequiredData(): void {
+    ngOnInit(): void {
         this.getListRoles()
         this.getListTenants()
     }

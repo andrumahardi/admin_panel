@@ -3,6 +3,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@ang
 import { MatDialog } from "@angular/material/dialog"
 import { ErrorPopup } from "./components/modal_dialog/modal_confirm.component"
 import { PaginatedListResult } from "./models/generics"
+import { BannerService } from "./service/banner.service"
 import { MenuService } from "./service/menu.service"
 import { RoleService } from "./service/role.service"
 import { TenantService } from "./service/tenant.service"
@@ -71,7 +72,7 @@ export class Paginator{
     ) {}
 
     getPaginationData(
-        service: UserService | MenuService | RoleService | TenantService,
+        service: UserService | MenuService | RoleService | TenantService | BannerService,
         dialog: MatDialog
     ): void {
         this.loading = true
@@ -90,11 +91,15 @@ export class Paginator{
     }
 
     dateParser(): void {
+        const dateKeys = ["expired_date", "date_joined", "created_date", "modified_date"]
+
         this.dataSource = this.dataSource.map(data => {
-            return {
-                ...data,
-                date_joined: Helpers.parseDate(data.date_joined)
-            }
+            let output = data
+            Object.keys(data).forEach(key => {
+                if (dateKeys.includes(key)) output[key] = Helpers.parseDate(output[key])
+            })
+
+            return output
         })
     }
 

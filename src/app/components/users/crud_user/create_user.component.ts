@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
@@ -14,7 +14,7 @@ import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
     styleUrls: [ "./user_styles.component.scss" ]
 })
 
-export class CreateUser{
+export class CreateUser implements OnInit{
     formControlData: Generics = {}
     loading: boolean = false
 
@@ -22,7 +22,9 @@ export class CreateUser{
         private userService: UserService,
         private dialog: MatDialog,
         private router: Router
-    ) {
+    ) {}
+    
+    ngOnInit(): void {
         this.setControlStates()
     }
 
