@@ -4,6 +4,7 @@ import {
     EventEmitter, 
     Input, 
     OnChanges, 
+    OnInit, 
     Output, 
     SimpleChanges, 
     ViewChild
@@ -24,7 +25,7 @@ import { ErrorPopup } from "../../modal_dialog/modal_confirm.component";
     styleUrls: [ "./menu_styles.component.scss" ]
 })
 
-export class MenuForm implements OnChanges{
+export class MenuForm implements OnChanges, OnInit{
     @Input() data: Generics = {}
     @Input() disableState: boolean = false
     @Input() forEdit: boolean = false
@@ -51,7 +52,7 @@ export class MenuForm implements OnChanges{
         menu_name: new FormControl({ value: "", disabled: this.disableState }, [
             Validators.required,
             Validators.maxLength(36),
-            Validators.minLength(5)
+            Validators.minLength(3)
         ]),
         menu_path_url: new FormControl({ value: "", disabled: this.disableState }),
         menu_seq: new FormControl({ value: "", disabled: this.disableState }, [
@@ -66,9 +67,7 @@ export class MenuForm implements OnChanges{
         private store: Store<AppState>,
         private dialog: MatDialog,
         private menuService: MenuService
-    ) {
-        this.getMenuList()
-    }
+    ) {}
 
     ngOnChanges(event: SimpleChanges) {
         if (event.disableState) {
@@ -79,7 +78,27 @@ export class MenuForm implements OnChanges{
 
         if (event.data) {
             this.setControlStates(event.data.currentValue)
+            console.log(event.data)
         }
+    }
+
+    ngOnInit(): void {
+        const promise = new Promise<ArraysInObject>((resolve) => {
+            this.store.select("dropdownItems").subscribe((data: ArraysInObject) => resolve(data))
+        })
+        promise.then(async (data: ArraysInObject) => {
+            if (!data.menuList[0]) {
+                const menus: Array<Generics> = await this.menuService.getAll()
+                
+                this.menuList = menus.filter(menu => !menu.parent)
+                this.store.dispatch(DropdownListActions.setMenuList({ payload: menus }))
+
+            }
+            else this.menuList = data.menuList.filter(menu => !menu.parent)
+        }).catch((error) => {
+            const exception = new ErrorGenerator(error, this.dialog)
+            exception.throwError()
+        })
     }
 
     readImage(event: Event): void {
@@ -108,25 +127,6 @@ export class MenuForm implements OnChanges{
             this.iconImage = inputFile.files[0]
             this.menuIcon = `url(${URL.createObjectURL(inputFile.files[0])})`
         }
-    }
-
-    private getMenuList(): void {
-        const promise = new Promise<ArraysInObject>((resolve) => {
-            this.store.select("dropdownItems").subscribe((data: ArraysInObject) => resolve(data))
-        })
-        promise.then(async (data: ArraysInObject) => {
-            if (!data.menuList[0]) {
-                const menus: Array<Generics> = await this.menuService.getAll()
-                
-                this.menuList = menus.filter(menu => !menu.parent)
-                this.store.dispatch(DropdownListActions.setMenuList({ payload: menus }))
-
-            }
-            else this.menuList = data.menuList.filter(menu => !menu.parent)
-        }).catch((error) => {
-            const exception = new ErrorGenerator(error, this.dialog)
-            exception.throwError()
-        })
     }
 
     onSubmit(): void {

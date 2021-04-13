@@ -1,13 +1,14 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ErrorGenerator } from "src/app/app.helpers";
 import { Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
-
-import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
+import { ConfirmUpdateDialog } from "../../modal_dialog/modal_confirm.component";
+import { Store } from "@ngrx/store";
+import { AppState } from "src/app/app.states";
+import * as DropdownItemActions from "src/app/actions/dropdown_items.actions"
+import * as UserActions from "src/app/actions/user.actions"
 
 @Component({
     selector: "app-detail-menu",
@@ -15,7 +16,7 @@ import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confir
     styleUrls: [ "./menu_styles.component.scss" ]
 })
 
-export class DetailMenu{
+export class DetailMenu implements OnInit{
     formControlData: Generics = {
         menu_name: "",
         menu_path_url: "",
@@ -31,12 +32,11 @@ export class DetailMenu{
     constructor(
         private dialog: MatDialog,
         private menuService: MenuService,
-        private route: ActivatedRoute
-    ) {
-        this.getDetailMenu()
-    }
+        private route: ActivatedRoute,
+        private store: Store<AppState>
+    ) {}
 
-    private getDetailMenu(): void {
+    ngOnInit(): void {
         const promise = new Promise<number>((resolve) => {
             this.route.paramMap
                 .subscribe(({ params }: Generics) => resolve(params.id))
@@ -76,10 +76,14 @@ export class DetailMenu{
                 payload.append("menu_path_url", eventPayload.data.menu_path_url.value)
                 payload.append("parent_id", eventPayload.data.parent.value)
                 payload.append("description", eventPayload.data.description.value)
-                payload.append("icon_file", eventPayload.file)
+                payload.append("icon_image", eventPayload.file)
         
                 const data = await this.menuService.doUpdate(payload, this.detailMenu.id)
                 this.detailMenu = data.body
+
+                this.store.dispatch(DropdownItemActions.setMenuList({payload: []}))
+                this.store.dispatch(UserActions.setUserMenu({ payload: [] }))
+
                 this.closeForm()
             }
         })

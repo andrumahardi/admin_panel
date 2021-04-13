@@ -47,8 +47,6 @@ export class CreateMenu{
         payload.append("description", eventPayload.data.description.value)
         payload.append("icon_image", eventPayload.file)
 
-        console.log(eventPayload.file)
-
         this.loading = true
         this.menuService.doCreate(payload)
             .then(() => {

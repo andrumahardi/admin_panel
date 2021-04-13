@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
@@ -12,7 +12,7 @@ import { ConfirmUpdateDialog, ErrorPopup } from "../modal_dialog/modal_confirm.c
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"]
 })
-export class Profile{
+export class Profile implements OnInit{
     editMode: boolean = false
     loading: boolean = false
 
@@ -27,9 +27,7 @@ export class Profile{
         private userService: UserService,
         private dialog: MatDialog,
         private route: ActivatedRoute
-    ){
-        this.fetchRequiredData()
-    }
+    ){}
 
     readonly errorMessages = {
         required: "This field is required",
@@ -62,11 +60,7 @@ export class Profile{
         is_confirmed: new FormControl({ value: "", disabled: true }),
     }
 
-    private fetchRequiredData() {
-        this.getUserProfile()
-    }
-
-    private getUserProfile() {
+    ngOnInit(): void {
         const promise = new Promise<number>((resolve) => {
             this.route.paramMap
                 .subscribe(({ params }: Generics) => resolve(params.id))
@@ -137,6 +131,8 @@ export class Profile{
                     this.loading = true
                     
                     const result = await this.userService.doUpdateProfile(payload, this.profile.id)
+                    this.userService.setLoggedinUser(result)
+
                     this.editMode = false
                     this.setControlStates(this.setDataValues(result))
                 }

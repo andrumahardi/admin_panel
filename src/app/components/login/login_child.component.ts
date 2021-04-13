@@ -1,13 +1,12 @@
-import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { ErrorGenerator } from "src/app/app.helpers";
+import { Generics } from "src/app/models/generics";
 import { PreLoginPayload } from "src/app/models/users";
 import { MenuService } from "src/app/service/menu.service";
 import { UserService } from "src/app/service/user.service";
-import { ErrorPopup } from "../modal_dialog/modal_confirm.component";
 
 @Component({
     selector: "app-login-child",
@@ -41,8 +40,10 @@ export class LoginChildComponent {
         this.errorMessage = ""
 
         this.userService.doLogin(formGroup.value)
-            .then((res) => {
-                this.menuService.setUserMenu(res.menu)
+            .then(async (res) => {
+                const data: Generics = await this.menuService.getList(`auth_user_id=${res.id}`)
+                
+                this.menuService.setUserMenu(data.results)
                 this.router.navigate(["/home"])
             })
             .catch((error) => {

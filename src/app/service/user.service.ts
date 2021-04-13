@@ -164,7 +164,7 @@ export class UserService extends ConfigService {
         })
     }
 
-    setLoggedinUser(payload: Generics): void {
+    setLoggedinUser(payload: Generics): User {
         const user: User = {
             id: payload.id,
             username: payload.username,
@@ -176,5 +176,7 @@ export class UserService extends ConfigService {
             profile_image: payload.profile_image
         }
         this.store.dispatch(UserActions.setUser({payload: user}))
+
+        return user
     }
 }

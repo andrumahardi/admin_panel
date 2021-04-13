@@ -114,8 +114,10 @@ export class MenuService extends ConfigService {
             .filter((obj: Generics) => !obj.parent)
     }
 
-    setUserMenu(menulist: Array<Generics>): void {
+    setUserMenu(menulist: Array<Generics>): Array<Menu> {
         const menu: Array<Menu> = this.organizeMenu(menulist)
         this.store.dispatch(UserActions.setUserMenu({ payload: menu }))
+
+        return menu
     }
 }

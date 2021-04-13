@@ -19,7 +19,7 @@ export class Menulist extends Paginator {
     loading: boolean = false
 
     displayedColumns: Array<string> = [
-        "id", "name", "path_url", "action"
+        "seq", "name", "path_url", "action"
     ]
 
     constructor(
@@ -27,7 +27,7 @@ export class Menulist extends Paginator {
         private dialog: MatDialog
     ) {
         super()
-        this.ordering = "id"
+        this.ordering = "menu_seq"
         this.getPaginationData(this.menuService, this.dialog)
     }
 

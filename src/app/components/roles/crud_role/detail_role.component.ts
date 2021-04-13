@@ -1,15 +1,16 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/app.states";
 import { ArraysInObject, Generics } from "src/app/models/generics";
 import { MenuService } from "src/app/service/menu.service";
-import { ConfirmUpdateDialog, ErrorPopup } from "../../modal_dialog/modal_confirm.component";
-import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
+import { ConfirmUpdateDialog } from "../../modal_dialog/modal_confirm.component";
 import { ActivatedRoute } from "@angular/router";
 import { RoleService } from "src/app/service/role.service";
 import { ErrorGenerator } from "src/app/app.helpers";
+import * as DropdownListActions from "src/app/actions/dropdown_items.actions";
+import * as UserActions from "src/app/actions/user.actions"
 
 @Component({
     selector: "app-detail-role",
@@ -17,7 +18,7 @@ import { ErrorGenerator } from "src/app/app.helpers";
     styleUrls: [ "./role_styles.component.scss" ]
 })
 
-export class DetailRole{
+export class DetailRole implements OnInit{
     detailRole: Generics = {}
     formControlData: Generics = {}
     listMenus: Array<Generics> = []
@@ -31,7 +32,9 @@ export class DetailRole{
         private menuService: MenuService,
         private roleService: RoleService,
         private route: ActivatedRoute
-    ) {
+    ) {}
+
+    ngOnInit(): void {
         this.getMenus()
         this.getDetailRole()
     }
@@ -108,13 +111,14 @@ export class DetailRole{
 
                 })
         })
-        promise.then(async (response: boolean) => {
-            if (response) {
-                await this.roleService.doUpdate(payload, this.detailRole.id)
+        promise.then(async (confirmed: boolean) => {
+            if (confirmed) {
+                const res = await this.roleService.doUpdate(payload, this.detailRole.id)
                 
+                this.store.dispatch(UserActions.setUserMenu({ payload: [] }))
                 this.formControlData = {
-                    role_name: roleName,
-                    is_active: isActive ? "active" : "inactive"
+                    role_name: res.body.role_name,
+                    is_active: res.body.is_active ? "active" : "inactive"
                 }
             } 
         })

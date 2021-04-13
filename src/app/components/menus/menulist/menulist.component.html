@@ -29,9 +29,9 @@
       [dataSource]="dataSource" 
       class="mat-elevation-z8 table">
 
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Menu ID </th>
-        <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+      <ng-container matColumnDef="seq">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Menu Seq </th>
+        <td mat-cell *matCellDef="let element"> {{ element.menu_seq }} </td>
       </ng-container>
     
       <ng-container matColumnDef="name">
