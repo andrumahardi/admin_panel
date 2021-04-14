@@ -1,11 +1,11 @@
- <section class="router-container spinner--parent">
+<section class="router-container spinner--parent">
     <div *ngIf="loading" class="spinner--container">
         <mat-spinner></mat-spinner>
     </div>
 
     <div id="form-section">
         <header>
-            <h3>Detail Menu</h3>
+            <h3>Detail banner</h3>
             <div *ngIf="!editMode" class="btn-group">
                 <button
                     type="button"
@@ -15,12 +15,13 @@
                 </button>
             </div>
         </header>
-        <app-menu-form
+        <app-banner-form
             [data]="formControlData"
-            [forEdit]="false"
+            [forEdit]="true"
             [clearImage]="clearImage"
             [disableState]="!editMode"
             (cancelEvent)="closeForm()"
-            (submitEvent)="update($event)"></app-menu-form>
+            (submitEvent)="update($event)"></app-banner-form>
     </div>
 </section>
+  

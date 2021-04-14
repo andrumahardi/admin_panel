@@ -19,7 +19,8 @@ export class BannerList extends Paginator{
         "id", 
         "title", 
         "expired date", 
-        "default"
+        "default",
+        "action"
     ]
 
     constructor(
@@ -63,15 +64,15 @@ export class BannerList extends Paginator{
     }
 
     performDelete(id: number): void {
-        // this.loading = true  
-        // this.bannerService.doDestroy(id)
-        //     .then(() => {
-        //         this.getPaginationData(this.bannerService, this.dialog)
-        //     })
-        //     .catch((error) => {
-        //         const exception = new ErrorGenerator(error, this.dialog)
-        //         exception.throwError()
-        //     })
-        //     .finally(() => this.loading = false)
+        this.loading = true  
+        this.bannerService.doDestroy(id)
+            .then(() => {
+                this.getPaginationData(this.bannerService, this.dialog)
+            })
+            .catch((error) => {
+                const exception = new ErrorGenerator(error, this.dialog)
+                exception.throwError()
+            })
+            .finally(() => this.loading = false)
     }
 }

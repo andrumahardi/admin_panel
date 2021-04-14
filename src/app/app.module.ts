@@ -78,6 +78,7 @@ import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.com
 import { BannerList } from "src/app/components/banners/bannerlist/bannerlist.component"
 import { BannerForm } from './components/banners/crud_banner/banner_form.component';
 import { CreateBanner } from './components/banners/crud_banner/create_banner.component';
+import { DetailBanner } from './components/banners/crud_banner/detail_banner.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { CreateBanner } from './components/banners/crud_banner/create_banner.com
     DetailTenant,
     BannerList,
     CreateBanner,
+    DetailBanner,
     BannerForm,
     ConfirmDeleteDialog,
     ConfirmUpdateDialog,

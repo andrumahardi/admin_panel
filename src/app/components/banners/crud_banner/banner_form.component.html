@@ -1,81 +1,110 @@
 <form (ngSubmit)="onSubmit()">
     <div class="formcomponent">
 
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Title</mat-label>
-                <input
-                    type="text"
-                    name="title"
-                    [formControl]="formControl.title"
-                    matInput>
-                <mat-error *ngIf="formControl.title.hasError('required')">
-                    {{errorMessages.required}}
-                </mat-error>
-                <mat-error *ngIf="formControl.title.hasError('maxlength')">
-                    {{errorMessages.maxlength}}
-                </mat-error>
-                <mat-error *ngIf="formControl.title.hasError('minlength')">
-                    {{errorMessages.minlength}}
-                </mat-error>
-            </mat-form-field>
+        <div>
+            <div class="input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Title</mat-label>
+                    <input
+                        type="text"
+                        name="title"
+                        [formControl]="formControl.title"
+                        matInput>
+                    <mat-error *ngIf="formControl.title.hasError('required')">
+                        {{errorMessages.required}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.title.hasError('maxlength')">
+                        {{errorMessages.maxlength}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.title.hasError('minlength')">
+                        {{errorMessages.minlength}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Expired date</mat-label>
+                    <input
+                        type="date"
+                        name="expired_date"
+                        [formControl]="formControl.expired_date"
+                        matInput>
+                    <mat-error *ngIf="formControl.expired_date.hasError('required')">
+                        {{errorMessages.required}}
+                    </mat-error>
+                    <mat-error *ngIf="formControl.expired_date.hasError('expirationdate') && !formControl.expired_date.hasError('required')">
+                        {{errorMessages.expireddate}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tenant</mat-label>
+                    <mat-select 
+                        name="tenant_id"
+                        [formControl]="formControl.tenant_id">
+                        <mat-option value=""> - </mat-option>
+                        <mat-option 
+                            *ngFor="let tenant of listTenants" 
+                            [value]="tenant.id.toString()">{{ tenant.tenant_name }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formControl.tenant_id.hasError('required')">
+                        {{errorMessages.required}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Default</mat-label>
+                    <mat-select 
+                        name="is_default"
+                        [formControl]="formControl.is_default">
+                        <mat-option value="false"> No </mat-option>
+                        <mat-option value="true"> Yes </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Expired date</mat-label>
-                <input
-                    type="date"
-                    name="expired_date"
-                    [formControl]="formControl.expired_date"
-                    matInput>
-                <mat-error *ngIf="formControl.expired_date.hasError('required')">
-                    {{errorMessages.required}}
-                </mat-error>
-            </mat-form-field>
-        </div>
+        <div>
+            <div class="inputfiles">
+                <figure class="inputfiles__image">
+                    <div [style.background-image]="bannerImageUrl"></div>
+                </figure>
+                <div *ngIf="!disableState">
+                    <label 
+                        class="inputfiles__label"
+                        for="icon_image">
+                        <img src="/assets/img/upload_ico.svg">
+                        <small>{{ imageLabel }}</small>
+                    </label>
+                    <input
+                        #inputIcon
+                        id="icon_image"
+                        style="display: none;"
+                        type="file"
+                        accept="image/*"
+                        (change)="readImage($event)"
+                        name="icon_image"/>
+                </div>
+            </div>
 
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Tenant</mat-label>
-                <mat-select 
-                    name="tenant_id"
-                    [formControl]="formControl.tenant_id">
-                    <mat-option value=""> - </mat-option>
-                    <mat-option 
-                        *ngFor="let tenant of listTenants" 
-                        [value]="tenant.id.toString()">{{ tenant.tenant_name }}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="formControl.tenant_id.hasError('required')">
-                    {{errorMessages.required}}
-                </mat-error>
-            </mat-form-field>
+            <div class="input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Article</mat-label>
+                    <textarea
+                        type="text"
+                        name="article"
+                        [formControl]="formControl.article"
+                        matInput></textarea>
+                </mat-form-field>
+            </div>
         </div>
-
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Default</mat-label>
-                <mat-select 
-                    name="is_default"
-                    [formControl]="formControl.is_default">
-                    <mat-option value="false"> No </mat-option>
-                    <mat-option value="true"> Yes </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="input">
-            <mat-form-field appearance="outline">
-                <mat-label>Article</mat-label>
-                <textarea
-                    type="text"
-                    name="article"
-                    [formControl]="formControl.article"
-                    matInput></textarea>
-            </mat-form-field>
-        </div>
-
     </div>
+
     <div *ngIf="!disableState" class="btn-group">
         <button 
             type="submit" 

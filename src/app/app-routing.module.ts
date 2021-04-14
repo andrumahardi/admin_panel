@@ -23,6 +23,7 @@ import { DetailTenant } from './components/tenants/crud_tenant/detail_tenant.com
 import { Profile } from './components/profile/profile.component';
 import { BannerList } from './components/banners/bannerlist/bannerlist.component';
 import { CreateBanner } from './components/banners/crud_banner/create_banner.component';
+import { DetailBanner } from './components/banners/crud_banner/detail_banner.component';
 
 const routes: Routes = [
   { path: "activation/:id/:token", component: ActivationUser },
@@ -56,6 +57,7 @@ const routes: Routes = [
       { path: "tenant/:id", component: DetailTenant },
       { path: "banner", component: BannerList },
       { path: "banner/create", component: CreateBanner },
+      { path: "banner/:id", component: DetailBanner },
       { path: "", redirectTo: "/home", pathMatch: "full" }
     ]
   },

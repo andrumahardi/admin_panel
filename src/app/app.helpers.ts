@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http"
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms"
 import { MatDialog } from "@angular/material/dialog"
 import { ErrorPopup } from "./components/modal_dialog/modal_confirm.component"
-import { PaginatedListResult } from "./models/generics"
+import { Generics, PaginatedListResult } from "./models/generics"
 import { BannerService } from "./service/banner.service"
 import { MenuService } from "./service/menu.service"
 import { RoleService } from "./service/role.service"
@@ -25,12 +25,23 @@ export class Helpers{
         "December"
     ]
 
-    static parseDate(datestring: string, format: string = "M, dd yy", includeTime: boolean = false): string {
+    static dateFormatConstraints: Generics = {
+        DEFAULT_FORMAT: "M, dd yy",
+        REVERSE_ORDINARY: "dd/mm/yyyy",
+        INPUT_TYPE_DATE: "yyyy/mm/dd"
+    }
+
+    static parseDate(
+        datestring: string,
+        format: string = Helpers.dateFormatConstraints.DEFAULT_FORMAT,
+        includeTime: boolean = false
+    ): string
+    {
         const instance = new Date(datestring)
 
         const year: number = instance.getFullYear()
         const monthName: string = this.months[instance.getMonth() + 1]
-        const month: number = instance.getMonth() + 1
+        const month: string = instance.getMonth() + 1 < 10 ? `0${instance.getMonth() + 1}` : String(instance.getMonth() + 1)
         
         let date: string = instance.getDate().toLocaleString()
         let hour: string = instance.getHours().toLocaleString()
@@ -44,13 +55,19 @@ export class Helpers{
         if (includeTime) time = ` (${hour} : ${minute})`
 
         switch (format) {
-            case "M, dd yy":
-                return `${monthName}, ${date} ${year}${time}`
-            case "dd/mm/yy":
+            case Helpers.dateFormatConstraints.REVERSE_ORDINARY:
                 return `${date}/${month}/${year}${time}`
+            case Helpers.dateFormatConstraints.INPUT_TYPE_DATE:
+                    return `${year}-${month}-${date}`
             default:
                 return `${monthName}, ${date} ${year}${time}`
         }
+    }
+
+    static validateDate(datestring: string): boolean {
+        const currentDate = new Date().getDate()
+        const targetDate = new Date(datestring).getDate()
+        return currentDate < targetDate
     }
 }
 
@@ -143,5 +160,16 @@ export class CustomValidator extends Validators{
             if (mobilephoneValid) return null
         }
         return {mobilepattern: true}
+    }
+
+    static expirationdate(): ValidatorFn {
+        return CustomValidator.expirationDateValidator
+    }
+
+    static expirationDateValidator(control: AbstractControl): ValidationErrors | null {
+        if (control.value) {
+            if (Helpers.validateDate(control.value)) return null
+        }
+        return { expirationdate: true }
     }
 }

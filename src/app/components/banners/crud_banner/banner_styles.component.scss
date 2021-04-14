@@ -3,6 +3,11 @@
 $buttons-width: 6rem;
 $light-grey: #737373;
 
+textarea {
+    height: 10rem !important;
+    resize: none !important;
+}
+
 #form-section{
     box-shadow: 0.2rem 0.2rem 0.5rem #9a9a9a;
     padding: 1rem;
@@ -24,19 +29,64 @@ form{
 }
 
 .formcomponent{
-    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: auto auto auto);
+    @include main.gridview($rowgap: 1rem, $colgap: 1rem, $coltemplate: 30% auto);
 
     .mat-form-field{
         width: 100%;
     }
+}
 
+.inputfiles {
+    @include main.flexbox(column);
+    margin-bottom: 0.5rem;
+
+    &__image{
+        @include main.flexbox(row, unset, center);
+        @include main.cover_image($size: cover);
+        background-image: url(../../../../assets/img/checkerboard.svg);
+        height: 10rem;
+        width: 100%;
+        border: 1px solid #e2e2e2;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        div{
+            @include main.cover_image($size: contain);
+            height: 8rem;
+            width: inherit;
+        }
+    }
+
+    &__label{
+        @include main.flexbox(row, space-between, center);
+        border: 1px solid white;
+        padding: 0.5rem;
+        background: main.$light-blue;
+        color: white;
+        border-radius: 0.2rem;
+        width: 10rem;
+        cursor: pointer;
+        box-shadow: 0.2rem 0.2rem 0.3rem #b7b7b7;
+    
+        small{
+            width: 75%;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    
+        &:hover{
+            background: darken($color: main.$light-blue, $amount: 4%);
+        }
+    }
 }
 
 ::ng-deep .mat-option-text {
     padding-left: 1rem;
 }
 
-input, input:disabled, ::ng-deep .mat-select-value-text {
+input, input:disabled, ::ng-deep .mat-select-value-text, textarea {
     color: #737373 !important;
     font-size: 10pt;
 }
@@ -51,7 +101,7 @@ $buttons: ("primary" "cancel" "green");
 
 @media screen and (max-width: 768px) {
     .formcomponent {
-        @include main.gridview($coltemplate: auto auto);
+        @include main.gridview($coltemplate: auto);
     }
 }
 

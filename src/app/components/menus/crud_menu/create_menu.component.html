@@ -10,6 +10,7 @@
         <app-menu-form
             [data]="formControlData"
             [forEdit]="false"
+            [clearImage]="false"
             [disableState]="false"
             (cancelEvent)="closeForm()"
             (submitEvent)="create($event)"></app-menu-form>

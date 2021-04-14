@@ -28,6 +28,7 @@ export class DetailMenu implements OnInit{
     private detailMenu: Generics = {}
     loading: boolean = false
     editMode: boolean = false
+    clearImage: boolean = false
 
     constructor(
         private dialog: MatDialog,
@@ -58,6 +59,8 @@ export class DetailMenu implements OnInit{
     }
 
     update(eventPayload: Generics): void {
+        this.clearImage = false
+
         const promise = new Promise<boolean>((resolve) => {
             this.dialog.open(ConfirmUpdateDialog, { data: { confirmed: true } })
             .afterClosed()
@@ -85,6 +88,7 @@ export class DetailMenu implements OnInit{
                 this.store.dispatch(UserActions.setUserMenu({ payload: [] }))
 
                 this.closeForm()
+                this.clearImage = true
             }
         })
             .catch((error) => {

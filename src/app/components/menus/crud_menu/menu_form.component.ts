@@ -29,6 +29,7 @@ export class MenuForm implements OnChanges, OnInit{
     @Input() data: Generics = {}
     @Input() disableState: boolean = false
     @Input() forEdit: boolean = false
+    @Input() clearImage: boolean = false
 
     @Output() submitEvent: EventEmitter<Generics> = new EventEmitter<Generics>()
     @Output() cancelEvent: EventEmitter<void> = new EventEmitter<void>()
@@ -78,7 +79,13 @@ export class MenuForm implements OnChanges, OnInit{
 
         if (event.data) {
             this.setControlStates(event.data.currentValue)
-            console.log(event.data)
+        }
+
+        if (event.clearImage) {
+            if (event.clearImage.currentValue) {
+                (this.inputIcon?.nativeElement as HTMLInputElement).value = ""
+                this.resetInputFilesValue()
+            }
         }
     }
 
@@ -136,9 +143,6 @@ export class MenuForm implements OnChanges, OnInit{
         if(formValid) {
             this.submitEvent.emit({ data: this.formControl, file: this.iconImage})
         }
-        
-        (this.inputIcon?.nativeElement as HTMLInputElement).value = ""
-        this.resetInputFilesValue()
     }
 
     onCancel: () => void = (): void => {
